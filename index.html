@@ -528,7 +528,36 @@
   </div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCfpFyQPkqCmQBGNLxHHS33dfI22CVVUx4",
+  authDomain: "uren-registratie-d3ba4.firebaseapp.com",
+  projectId: "uren-registratie-d3ba4",
+  storageBucket: "uren-registratie-d3ba4.firebasestorage.app",
+  messagingSenderId: "737571663966",
+  appId: "1:737571663966:web:9136a5d4f75d9cda0a84cf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ── Firebase helpers ──────────────────────────────────────────────────────────
+async function fbSave(docId, data) {
+  try { await setDoc(doc(db, "zzp", docId), { value: JSON.stringify(data) }); } catch(e) { console.warn("fbSave", e); }
+}
+async function fbLoad(docId, fallback) {
+  try {
+    const snap = await getDoc(doc(db, "zzp", docId));
+    if (snap.exists()) return JSON.parse(snap.data().value);
+  } catch(e) { console.warn("fbLoad", e); }
+  return fallback;
+}
+async function fbDelete(docId) {
+  try { await deleteDoc(doc(db, "zzp", docId)); } catch(e) { console.warn("fbDelete", e); }
+}
 const BUILTIN_TYPES = [
   { key:"klant",     label:"Klantbezoek", color:"#16a34a", bg:"#f0fdf4", text:"#15803d" },
   { key:"fs8",       label:"FS Groen 8u",  color:"#0e7490", bg:"#ecfeff", text:"#155e75" },
@@ -551,6 +580,7 @@ const allMiddelen    = () => [...BUILTIN_MIDDELEN, ...customMiddelen];
 let selectedMiddelen = []; // keys of selected middelen for current modal
 let TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
 
+// Start with localStorage as cache, Firebase will override on load
 let entries     = JSON.parse(localStorage.getItem("zzp_entries")  || "{}");
 let hours       = JSON.parse(localStorage.getItem("zzp_hours")    || '{"klant":2,"fs8":8,"fs9":9,"fs10":10,"fs11":11,"fs12":12,"werkdag":8,"ziekte":0,"ziekenhuis":0}');
 let customTypes = JSON.parse(localStorage.getItem("zzp_custom")   || "[]");
@@ -572,12 +602,20 @@ const allTypes = () => [...TYPES, ...customTypes];
 const typeOf   = k => allTypes().find(t => t.key === k);
 
 const saveAll = () => {
+  // Save to localStorage (cache)
   localStorage.setItem("zzp_entries",  JSON.stringify(entries));
   localStorage.setItem("zzp_hours",    JSON.stringify(hours));
   localStorage.setItem("zzp_custom",   JSON.stringify(customTypes));
   localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
   localStorage.setItem("zzp_deleted",  JSON.stringify(deletedBuiltin));
   localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
+  // Save to Firebase (sync)
+  fbSave("entries",      entries);
+  fbSave("hours",        hours);
+  fbSave("customTypes",  customTypes);
+  fbSave("yearGoal",     yearGoal);
+  fbSave("deletedBuiltin", deletedBuiltin);
+  fbSave("customMiddelen", customMiddelen);
 };
 
 
@@ -1100,11 +1138,72 @@ function renderYearForecast() {
   window.renamedMiddelen = renames;
 })();
 
-// Init
-renderSettings();
-renderCalendar();
-renderSummary();
-renderYearForecast();
+// ── Init: load from Firebase, fall back to localStorage ──────────────────────
+async function initApp() {
+  // Show loading indicator
+  document.getElementById("cal-grid").innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text3);font-size:14px">⏳ Gegevens laden…</div>';
+
+  // Load all data from Firebase (with localStorage fallback)
+  entries        = await fbLoad("entries",        entries);
+  hours          = await fbLoad("hours",          hours);
+  customTypes    = await fbLoad("customTypes",    customTypes);
+  yearGoal       = await fbLoad("yearGoal",       yearGoal);
+  deletedBuiltin = await fbLoad("deletedBuiltin", deletedBuiltin);
+  customMiddelen = await fbLoad("customMiddelen", customMiddelen);
+
+  // Rebuild TYPES with loaded deletedBuiltin
+  TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
+
+  // Apply middelen renames/deletions
+  const renames = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
+  const deletedM = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
+  for (let i = BUILTIN_MIDDELEN.length - 1; i >= 0; i--) {
+    const m = BUILTIN_MIDDELEN[i];
+    if (deletedM.includes(m.key)) { BUILTIN_MIDDELEN.splice(i, 1); continue; }
+    if (renames[m.key]) m.label = renames[m.key];
+  }
+  window.renamedMiddelen = renames;
+
+  // Cache to localStorage
+  localStorage.setItem("zzp_entries",  JSON.stringify(entries));
+  localStorage.setItem("zzp_hours",    JSON.stringify(hours));
+  localStorage.setItem("zzp_custom",   JSON.stringify(customTypes));
+  localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
+  localStorage.setItem("zzp_deleted",  JSON.stringify(deletedBuiltin));
+  localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
+
+  renderSettings();
+  renderCalendar();
+  renderSummary();
+  renderYearForecast();
+
+  // Listen for real-time updates from Firebase
+  onSnapshot(collection(db, "zzp"), (snapshot) => {
+    let changed = false;
+    snapshot.docChanges().forEach(change => {
+      if (change.type === "modified" || change.type === "added") {
+        try {
+          const val = JSON.parse(change.doc.data().value);
+          const id  = change.doc.id;
+          if (id === "entries")       { entries        = val; changed = true; }
+          if (id === "hours")         { hours          = val; changed = true; }
+          if (id === "customTypes")   { customTypes    = val; changed = true; }
+          if (id === "yearGoal")      { yearGoal       = val; changed = true; }
+          if (id === "customMiddelen"){ customMiddelen = val; changed = true; }
+          if (id === "deletedBuiltin"){ deletedBuiltin = val; TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key)); changed = true; }
+        } catch(e) {}
+      }
+    });
+    if (changed) {
+      renderSettings();
+      renderCalendar();
+      renderSummary();
+      renderYearForecast();
+    }
+  });
+}
+
+initApp();
 </script>
 
 <!-- Add type modal -->
