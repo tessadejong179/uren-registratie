@@ -1,637 +1,1248 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Urenregistratie ZZP</title>
-<meta name="theme-color" content="#f5f4f0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Urenregistratie">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E%3Ctext y='.9em' font-size='75' x='12'%3E🕐%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urenregistratie ZZP</title>
+  <meta name="theme-color" content="#f5f4f0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Urenregistratie">
+  <link rel="apple-touch-icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E%3Ctext y='.9em' font-size='75' x='12'%3E🕐%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  :root {
-    --bg: #f5f4f0;
-    --surface: #ffffff;
-    --surface2: #f0eeea;
-    --border: #e2dfd8;
-    --border2: #ccc9c0;
-    --text: #1a1916;
-    --text2: #6b6860;
-    --text3: #a09d96;
-    --blue: #2563eb;
-    --blue-bg: #eff6ff;
-    --blue-text: #1d4ed8;
-    --green: #16a34a;
-    --green-bg: #f0fdf4;
-    --green-text: #15803d;
-    --amber: #d97706;
-    --amber-bg: #fffbeb;
-    --amber-text: #b45309;
-    --red: #dc2626;
-    --red-bg: #fef2f2;
-    --red-text: #b91c1c;
-    --radius: 10px;
-    --radius-sm: 6px;
-  }
+    :root {
+      --bg: #f5f4f0;
+      --surface: #ffffff;
+      --surface2: #f0eeea;
+      --border: #e2dfd8;
+      --border2: #ccc9c0;
+      --text: #1a1916;
+      --text2: #6b6860;
+      --text3: #a09d96;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --blue-text: #1d4ed8;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --green-text: #15803d;
+      --amber: #d97706;
+      --amber-bg: #fffbeb;
+      --amber-text: #b45309;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+      --red-text: #b91c1c;
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
 
-  body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 24px 16px;
-  }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
 
-  .container { max-width: 780px; margin: 0 auto; }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
 
-  header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .logo { font-size: 20px; font-weight: 600; color: var(--text); }
-  .logo span { color: var(--text3); font-weight: 400; }
-  .subtitle { font-size: 13px; color: var(--text3); }
+    header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
-  /* Settings */
-  .settings-section { margin-bottom: 20px; }
-  .section-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
-  .settings-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .setting-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-  }
-  .setting-top { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
-  .s-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .s-name { font-size: 13px; font-weight: 500; }
-  .s-row { display: flex; align-items: center; gap: 6px; }
-  .s-row label { font-size: 12px; color: var(--text2); flex: 1; }
-  .s-row input {
-    width: 56px; text-align: center;
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    padding: 4px 6px;
-    font-size: 13px;
-    font-family: inherit;
-    background: var(--bg);
-    color: var(--text);
-  }
-  .s-row input:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
+    .logo {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
 
-  /* Calendar header */
-  .cal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-  }
-  .month-nav { display: flex; align-items: center; gap: 12px; }
-  .month-title { font-size: 17px; font-weight: 600; min-width: 180px; }
-  .nav-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 6px 12px;
-    cursor: pointer;
-    font-size: 16px;
-    color: var(--text2);
-    line-height: 1;
-  }
-  .nav-btn:hover { background: var(--surface2); color: var(--text); }
+    .logo span {
+      color: var(--text3);
+      font-weight: 400;
+    }
 
-  .export-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: inherit;
-    cursor: pointer;
-    color: var(--text);
-    font-weight: 500;
-  }
-  .export-btn:hover { background: var(--surface2); }
+    .subtitle {
+      font-size: 13px;
+      color: var(--text3);
+    }
 
-  /* Calendar grid */
-  .cal-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-  .cal-days-header {
-    display: grid;
-    grid-template-columns: 36px repeat(7, 1fr);
-    border-bottom: 1px solid var(--border);
-  }
-  .cal-days-header div {
-    text-align: center;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    color: var(--text3);
-    padding: 10px 0;
-  }
-  .cal-days-header div:nth-child(7),
-  .cal-days-header div:nth-child(8) { color: var(--red); }
+    /* Settings */
+    .settings-section {
+      margin-bottom: 20px;
+    }
 
-  .cal-grid { display: grid; grid-template-columns: 36px repeat(7, 1fr); }
-  .week-num { font-size: 10px; color: var(--text3); background: var(--surface2); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: center; padding-top: 8px; font-weight: 600; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
 
-  .day-cell {
-    min-height: 72px;
-    padding: 8px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background .1s;
-    position: relative;
-  }
-  .day-cell:nth-child(8n) { border-right: none; }
-  .day-cell:hover { background: var(--surface2); }
-  .day-cell.empty { cursor: default; background: var(--bg); opacity: .5; }
-  .day-cell.empty:hover { background: var(--bg); }
-  .day-cell.weekend .day-num { color: var(--red); }
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
 
-  .day-num {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text2);
-    margin-bottom: 4px;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-  }
-  .day-cell.today .day-num {
-    background: var(--blue);
-    color: #fff;
-    font-weight: 600;
-  }
-  .act-pill {
-    font-size: 10px;
-    font-weight: 500;
-    padding: 2px 7px;
-    border-radius: 20px;
-    display: inline-block;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .day-hrs { font-size: 11px; color: var(--text3); margin-top: 3px; }
-  .day-note { font-size: 10px; color: var(--text2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; font-style: italic; }
+    .setting-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
 
-  /* Summary */
-  .summary { display: block; margin-bottom: 24px; }
-  .sum-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 20px; }
-  .sum-num { font-size: 32px; font-weight: 600; }
-  .sum-lbl { font-size: 14px; color: var(--text2); margin-top: 2px; }
-  .sum-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
-  .sum-sick { font-size: 12px; color: #b91c1c; margin-top: 6px; }
+    .setting-top {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 8px;
+    }
 
+    .s-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
 
+    .s-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
 
+    .s-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
+    .s-row label {
+      font-size: 12px;
+      color: var(--text2);
+      flex: 1;
+    }
 
+    .s-row input {
+      width: 56px;
+      text-align: center;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 4px 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
 
-
-
-
-
-
-  /* Year forecast */
-  .year-section { margin-top: 8px; margin-bottom: 24px; }
-  .year-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
-  .year-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
-  .year-title { font-size: 14px; font-weight: 600; color: var(--text); }
-  .year-goal-row { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); }
-  .year-goal-row input { width: 72px; text-align: center; border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 4px 6px; font-size: 13px; font-family: inherit; background: var(--bg); color: var(--text); }
-  .year-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
-  .year-stat { text-align: center; }
-  .year-stat-num { font-size: 22px; font-weight: 600; }
-  .year-stat-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .progress-wrap { background: var(--surface2); border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: 8px; }
-  .progress-bar { height: 100%; border-radius: 99px; transition: width .4s; }
-  .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); }
-  .forecast-line { font-size: 12px; margin-top: 10px; padding: 8px 12px; border-radius: var(--radius-sm); }
-  .forecast-ahead { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
-  .forecast-behind { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-  .forecast-ok { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
-
-  /* Modal */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.4);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 24px;
-    width: 100%;
-    max-width: 340px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.15);
-  }
-  .modal-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .modal-date { font-size: 13px; color: var(--text3); margin-bottom: 18px; }
-
-  .opt-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    text-align: left;
-    padding: 11px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    cursor: pointer;
-    margin-bottom: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 500;
-    transition: background .1s, border-color .1s;
-  }
-  .opt-btn:hover { background: var(--surface2); }
-  .opt-btn.active { border-width: 2px; }
-  .opt-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-  .opt-default { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--text3); }
-
-  .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-
-  .hours-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-  .hours-row label { font-size: 13px; color: var(--text2); flex: 1; }
-  .hours-row input {
-    width: 72px;
-    text-align: center;
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    padding: 6px 8px;
-    font-size: 14px;
-    font-family: inherit;
-    background: var(--bg);
-    color: var(--text);
-  }
-  .hours-row input:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
-
-  .modal-btns { display: flex; gap: 8px; }
-  .btn-primary {
-    flex: 1;
-    padding: 10px;
-    background: var(--blue);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 14px;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-  }
-  .btn-primary:hover { background: var(--blue-text); }
-  .btn-ghost {
-    flex: 1;
-    padding: 10px;
-    background: none;
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 14px;
-    font-family: inherit;
-    cursor: pointer;
-  }
-  .btn-ghost:hover { background: var(--surface2); }
-  .btn-danger {
-    width: 100%;
-    margin-top: 10px;
-    padding: 9px;
-    background: none;
-    color: var(--red-text);
-    border: 1px solid #fca5a5;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: inherit;
-    cursor: pointer;
-  }
-  .btn-danger:hover { background: var(--red-bg); }
-
-  .setting-card.add-card {
-    border: 1.5px dashed var(--border2);
-    background: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    min-height: 72px;
-    color: var(--text3);
-    font-size: 13px;
-    gap: 6px;
-    transition: background .1s, border-color .1s;
-  }
-  .setting-card.add-card:hover { background: var(--surface2); border-color: var(--blue); color: var(--blue); }
-  .setting-card .s-delete { margin-left: auto; background: none; border: none; cursor: pointer; color: var(--text3); font-size: 14px; padding: 0 2px; line-height: 1; }
-  .setting-card .s-delete:hover { color: var(--red); }
-  .add-modal { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; width: 100%; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
-  .add-modal h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
-  .field-row { margin-bottom: 14px; }
-  .field-row label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 5px; font-weight: 500; }
-  .field-row input[type=text], .field-row input[type=number] { width: 100%; border: 1px solid var(--border2); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 14px; font-family: inherit; background: var(--bg); color: var(--text); }
-  .field-row input:focus { outline: 2px solid var(--blue); outline-offset: 1px; }
-  .color-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-  .color-opt { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform .1s; }
-  .color-opt:hover { transform: scale(1.15); }
-  .color-opt.selected { border-color: var(--text); }
-  .exclude-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
-  .exclude-row input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; }
-  .exclude-row label { font-size: 13px; color: var(--text2); cursor: pointer; }
-  /* Middelen sectie */
-  .middelen-section { margin-top: 20px; }
-  .middelen-label { font-size: 11px; font-weight: 600; letter-spacing:.06em; text-transform:uppercase; color:var(--text3); margin-bottom: 8px; }
-  .middelen-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
-  .middel-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 12px; border-radius: 99px;
-    border: 1.5px solid var(--border2);
-    background: var(--surface); color: var(--text);
-    font-size: 13px; font-family: inherit; cursor: pointer;
-    transition: all .1s;
-  }
-  .middel-btn:hover { border-color: var(--text2); }
-  .middel-btn.active { border-color: #059669; background: #ecfdf5; color: #065f46; font-weight: 500; }
-  .middel-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-  .middel-add-btn {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 6px 12px; border-radius: 99px;
-    border: 1.5px dashed var(--border2);
-    background: none; color: var(--text3);
-    font-size: 13px; font-family: inherit; cursor: pointer;
-  }
-  .middel-add-btn:hover { border-color: var(--blue); color: var(--blue); }
-  .day-middelen { font-size: 9px; color: #065f46; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-  @media (max-width: 600px) {
-    body { padding: 12px 10px; }
-    .container { max-width: 100%; }
-
-    /* Header */
-    header { flex-direction: column; align-items: flex-start; gap: 2px; margin-bottom: 16px; }
-    .logo { font-size: 17px; }
-
-    /* Settings: 2 columns on mobile */
-    .settings-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
-    .setting-card { padding: 9px 10px; }
-    .s-name { font-size: 12px; }
-    .s-row input { width: 46px; font-size: 12px; }
+    .s-row input:focus {
+      outline: 2px solid var(--blue);
+      outline-offset: 1px;
+    }
 
     /* Calendar header */
-    .cal-header { margin-bottom: 8px; }
-    .month-title { font-size: 15px; min-width: 0; }
-    .export-btn { font-size: 12px; padding: 6px 10px; }
-    .nav-btn { padding: 5px 10px; font-size: 15px; }
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
 
-    /* Calendar grid: tighter cells, keep pills but smaller */
-    .cal-days-header { grid-template-columns: 26px repeat(7, 1fr); }
-    .cal-days-header div { font-size: 10px; padding: 6px 0; }
-    .cal-grid { grid-template-columns: 26px repeat(7, 1fr); }
-    .week-num { font-size: 9px; padding-top: 6px; }
-    .day-cell { min-height: 54px; padding: 4px 3px; }
-    .day-cell:nth-child(8n) { border-right: none; }
-    .day-num { font-size: 11px; width: 20px; height: 20px; margin-bottom: 2px; }
-    .act-pill { font-size: 9px; padding: 1px 4px; max-width: 100%; }
-    .day-hrs { font-size: 9px; margin-top: 1px; }
-    .day-note { display: none; }
+    .month-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .month-title {
+      font-size: 17px;
+      font-weight: 600;
+      min-width: 180px;
+    }
+
+    .nav-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text2);
+      line-height: 1;
+    }
+
+    .nav-btn:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .export-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .export-btn:hover {
+      background: var(--surface2);
+    }
+
+    /* Calendar grid */
+    .cal-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .cal-days-header {
+      display: grid;
+      grid-template-columns: 36px repeat(7, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cal-days-header div {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--text3);
+      padding: 10px 0;
+    }
+
+    .cal-days-header div:nth-child(7),
+    .cal-days-header div:nth-child(8) {
+      color: var(--red);
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: 36px repeat(7, 1fr);
+    }
+
+    .week-num {
+      font-size: 10px;
+      color: var(--text3);
+      background: var(--surface2);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 8px;
+      font-weight: 600;
+    }
+
+    .day-cell {
+      min-height: 72px;
+      padding: 8px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background .1s;
+      position: relative;
+    }
+
+    .day-cell:nth-child(8n) {
+      border-right: none;
+    }
+
+    .day-cell:hover {
+      background: var(--surface2);
+    }
+
+    .day-cell.empty {
+      cursor: default;
+      background: var(--bg);
+      opacity: .5;
+    }
+
+    .day-cell.empty:hover {
+      background: var(--bg);
+    }
+
+    .day-cell.weekend .day-num {
+      color: var(--red);
+    }
+
+    .day-num {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+      margin-bottom: 4px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .day-cell.today .day-num {
+      background: var(--blue);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .act-pill {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 20px;
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .day-hrs {
+      font-size: 11px;
+      color: var(--text3);
+      margin-top: 3px;
+    }
+
+    .day-note {
+      font-size: 10px;
+      color: var(--text2);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      font-style: italic;
+    }
 
     /* Summary */
-    .sum-card { padding: 12px 14px; gap: 14px; }
-    .sum-num { font-size: 26px; }
-    .sum-lbl { font-size: 13px; }
+    .summary {
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .sum-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .sum-num {
+      font-size: 32px;
+      font-weight: 600;
+    }
+
+    .sum-lbl {
+      font-size: 14px;
+      color: var(--text2);
+      margin-top: 2px;
+    }
+
+    .sum-sub {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 1px;
+    }
+
+    .sum-sick {
+      font-size: 12px;
+      color: #b91c1c;
+      margin-top: 6px;
+    }
+
+
+
+
+
+
+
+
+
+
 
     /* Year forecast */
-    .year-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .year-stat-num { font-size: 18px; }
-    .year-stat-lbl { font-size: 10px; }
-    .year-header { flex-direction: column; align-items: flex-start; gap: 6px; }
-    .year-goal-row input { width: 60px; }
+    .year-section {
+      margin-top: 8px;
+      margin-bottom: 24px;
+    }
 
-    /* Modal: full-width bottom sheet feel */
-    .modal-overlay { align-items: flex-end; padding: 0; }
+    .year-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+
+    .year-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .year-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .year-goal-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .year-goal-row input {
+      width: 72px;
+      text-align: center;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 4px 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .year-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .year-stat {
+      text-align: center;
+    }
+
+    .year-stat-num {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .year-stat-lbl {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 2px;
+    }
+
+    .progress-wrap {
+      background: var(--surface2);
+      border-radius: 99px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 99px;
+      transition: width .4s;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .forecast-line {
+      font-size: 12px;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .forecast-ahead {
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .forecast-behind {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .forecast-ok {
+      background: var(--surface2);
+      color: var(--text2);
+      border: 1px solid var(--border);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .4);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
     .modal {
-      border-radius: var(--radius) var(--radius) 0 0;
-      max-width: 100%;
-      padding: 20px 16px 28px;
-      max-height: 90vh;
-      overflow-y: auto;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .15);
     }
-    .opt-btn { padding: 10px 12px; font-size: 13px; }
-    .opt-default { font-size: 11px; }
 
-    /* Add modal */
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .modal-date {
+      font-size: 13px;
+      color: var(--text3);
+      margin-bottom: 18px;
+    }
+
+    .opt-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      cursor: pointer;
+      margin-bottom: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 500;
+      transition: background .1s, border-color .1s;
+    }
+
+    .opt-btn:hover {
+      background: var(--surface2);
+    }
+
+    .opt-btn.active {
+      border-width: 2px;
+    }
+
+    .opt-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .opt-default {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text3);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0;
+    }
+
+    .hours-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .hours-row label {
+      font-size: 13px;
+      color: var(--text2);
+      flex: 1;
+    }
+
+    .hours-row input {
+      width: 72px;
+      text-align: center;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .hours-row input:focus {
+      outline: 2px solid var(--blue);
+      outline-offset: 1px;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 10px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-text);
+    }
+
+    .btn-ghost {
+      flex: 1;
+      padding: 10px;
+      background: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface2);
+    }
+
+    .btn-danger {
+      width: 100%;
+      margin-top: 10px;
+      padding: 9px;
+      background: none;
+      color: var(--red-text);
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .btn-danger:hover {
+      background: var(--red-bg);
+    }
+
+    .setting-card.add-card {
+      border: 1.5px dashed var(--border2);
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      min-height: 72px;
+      color: var(--text3);
+      font-size: 13px;
+      gap: 6px;
+      transition: background .1s, border-color .1s;
+    }
+
+    .setting-card.add-card:hover {
+      background: var(--surface2);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .setting-card .s-delete {
+      margin-left: auto;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text3);
+      font-size: 14px;
+      padding: 0 2px;
+      line-height: 1;
+    }
+
+    .setting-card .s-delete:hover {
+      color: var(--red);
+    }
+
     .add-modal {
-      border-radius: var(--radius) var(--radius) 0 0;
-      max-width: 100%;
-      padding: 20px 16px 28px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .15);
     }
-  }
-</style>
+
+    .add-modal h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .field-row {
+      margin-bottom: 14px;
+    }
+
+    .field-row label {
+      display: block;
+      font-size: 12px;
+      color: var(--text2);
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .field-row input[type=text],
+    .field-row input[type=number] {
+      width: 100%;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .field-row input:focus {
+      outline: 2px solid var(--blue);
+      outline-offset: 1px;
+    }
+
+    .color-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .color-opt {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .1s;
+    }
+
+    .color-opt:hover {
+      transform: scale(1.15);
+    }
+
+    .color-opt.selected {
+      border-color: var(--text);
+    }
+
+    .exclude-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .exclude-row input[type=checkbox] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .exclude-row label {
+      font-size: 13px;
+      color: var(--text2);
+      cursor: pointer;
+    }
+
+    /* Middelen sectie */
+    .middelen-section {
+      margin-top: 20px;
+    }
+
+    .middelen-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+
+    .middelen-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .middel-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 99px;
+      border: 1.5px solid var(--border2);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .1s;
+    }
+
+    .middel-btn:hover {
+      border-color: var(--text2);
+    }
+
+    .middel-btn.active {
+      border-color: #059669;
+      background: #ecfdf5;
+      color: #065f46;
+      font-weight: 500;
+    }
+
+    .middel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .middel-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 99px;
+      border: 1.5px dashed var(--border2);
+      background: none;
+      color: var(--text3);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .middel-add-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .day-middelen {
+      font-size: 9px;
+      color: #065f46;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px 10px;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      /* Header */
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        margin-bottom: 16px;
+      }
+
+      .logo {
+        font-size: 17px;
+      }
+
+      /* Settings: 2 columns on mobile */
+      .settings-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      .setting-card {
+        padding: 9px 10px;
+      }
+
+      .s-name {
+        font-size: 12px;
+      }
+
+      .s-row input {
+        width: 46px;
+        font-size: 12px;
+      }
+
+      /* Calendar header */
+      .cal-header {
+        margin-bottom: 8px;
+      }
+
+      .month-title {
+        font-size: 15px;
+        min-width: 0;
+      }
+
+      .export-btn {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
+      .nav-btn {
+        padding: 5px 10px;
+        font-size: 15px;
+      }
+
+      /* Calendar grid: tighter cells, keep pills but smaller */
+      .cal-days-header {
+        grid-template-columns: 26px repeat(7, 1fr);
+      }
+
+      .cal-days-header div {
+        font-size: 10px;
+        padding: 6px 0;
+      }
+
+      .cal-grid {
+        grid-template-columns: 26px repeat(7, 1fr);
+      }
+
+      .week-num {
+        font-size: 9px;
+        padding-top: 6px;
+      }
+
+      .day-cell {
+        min-height: 54px;
+        padding: 4px 3px;
+      }
+
+      .day-cell:nth-child(8n) {
+        border-right: none;
+      }
+
+      .day-num {
+        font-size: 11px;
+        width: 20px;
+        height: 20px;
+        margin-bottom: 2px;
+      }
+
+      .act-pill {
+        font-size: 9px;
+        padding: 1px 4px;
+        max-width: 100%;
+      }
+
+      .day-hrs {
+        font-size: 9px;
+        margin-top: 1px;
+      }
+
+      .day-note {
+        display: none;
+      }
+
+      /* Summary */
+      .sum-card {
+        padding: 12px 14px;
+        gap: 14px;
+      }
+
+      .sum-num {
+        font-size: 26px;
+      }
+
+      .sum-lbl {
+        font-size: 13px;
+      }
+
+      /* Year forecast */
+      .year-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+      }
+
+      .year-stat-num {
+        font-size: 18px;
+      }
+
+      .year-stat-lbl {
+        font-size: 10px;
+      }
+
+      .year-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .year-goal-row input {
+        width: 60px;
+      }
+
+      /* Modal: full-width bottom sheet feel */
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal {
+        border-radius: var(--radius) var(--radius) 0 0;
+        max-width: 100%;
+        padding: 20px 16px 28px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .opt-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      .opt-default {
+        font-size: 11px;
+      }
+
+      /* Add modal */
+      .add-modal {
+        border-radius: var(--radius) var(--radius) 0 0;
+        max-width: 100%;
+        padding: 20px 16px 28px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-  <header>
-    <div>
-      <div class="logo">Urenregistratie <span>ZZP</span></div>
-    </div>
-    <div class="subtitle" id="hdr-sub"></div>
-  </header>
+  <div class="container">
+    <header>
+      <div>
+        <div class="logo">Urenregistratie <span>ZZP</span></div>
+      </div>
+      <div class="subtitle" id="hdr-sub"></div>
+    </header>
 
-  <div class="settings-section">
-    <div class="section-label">Standaard uren per activiteit</div>
-    <div class="settings-grid" id="settings-grid"></div>
+    <div class="settings-section">
+      <div class="section-label">Standaard uren per activiteit</div>
+      <div class="settings-grid" id="settings-grid"></div>
+    </div>
+
+    <div class="cal-header">
+      <div class="month-nav">
+        <button class="nav-btn" onclick="prevMonth()" aria-label="Vorige maand">&#8249;</button>
+        <div class="month-title" id="month-title"></div>
+        <button class="nav-btn" onclick="nextMonth()" aria-label="Volgende maand">&#8250;</button>
+      </div>
+      <button class="export-btn" onclick="exportExcel()">
+        &#8615; Exporteer Excel
+      </button>
+    </div>
+
+    <div class="cal-wrap">
+      <div class="cal-days-header">
+        <div style="font-size:10px">Wk</div>
+        <div>Ma</div>
+        <div>Di</div>
+        <div>Wo</div>
+        <div>Do</div>
+        <div>Vr</div>
+        <div>Za</div>
+        <div>Zo</div>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+    <div class="year-section" id="year-section"></div>
   </div>
 
-  <div class="cal-header">
-    <div class="month-nav">
-      <button class="nav-btn" onclick="prevMonth()" aria-label="Vorige maand">&#8249;</button>
-      <div class="month-title" id="month-title"></div>
-      <button class="nav-btn" onclick="nextMonth()" aria-label="Volgende maand">&#8250;</button>
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-date" id="modal-date"></div>
+      <div id="modal-opts"></div>
+      <hr class="divider">
+      <div class="hours-row" id="hours-row-wrap">
+        <label>Uren (laat leeg voor standaard)</label>
+        <input type="number" id="modal-hours" min="0.5" max="24" step="0.5" placeholder="–">
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:12px;color:var(--text2);font-weight:500;margin-bottom:5px">Notitie (bijv.
+          klantnaam)</label>
+        <input type="text" id="modal-note" maxlength="80" placeholder="Optioneel…"
+          style="width:100%;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);color:var(--text);">
+      </div>
+      <hr class="divider" style="margin:14px 0">
+      <div class="middelen-section">
+        <div class="middelen-label">Gebruikte middelen</div>
+        <div class="middelen-grid" id="modal-middelen"></div>
+      </div>
+      <div class="modal-btns" style="margin-top:16px">
+        <button class="btn-ghost" onclick="closeModal()">Annuleren</button>
+        <button class="btn-primary" onclick="saveEntry()">Opslaan</button>
+      </div>
+      <button class="btn-danger" id="btn-delete" onclick="deleteEntry()" style="display:none">Verwijder
+        registratie</button>
     </div>
-    <button class="export-btn" onclick="exportExcel()">
-      &#8615; Exporteer Excel
-    </button>
   </div>
 
-  <div class="cal-wrap">
-    <div class="cal-days-header">
-      <div style="font-size:10px">Wk</div><div>Ma</div><div>Di</div><div>Wo</div><div>Do</div><div>Vr</div><div>Za</div><div>Zo</div>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
-  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
-  <div class="summary" id="summary"></div>
-  <div class="year-section" id="year-section"></div>
-</div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCfpFyQPkqCmQBGNLxHHS33dfI22CVVUx4",
+      authDomain: "uren-registratie-d3ba4.firebaseapp.com",
+      projectId: "uren-registratie-d3ba4",
+      storageBucket: "uren-registratie-d3ba4.firebasestorage.app",
+      messagingSenderId: "737571663966",
+      appId: "1:737571663966:web:9136a5d4f75d9cda0a84cf"
+    };
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-title" id="modal-title"></div>
-    <div class="modal-date" id="modal-date"></div>
-    <div id="modal-opts"></div>
-    <hr class="divider">
-    <div class="hours-row" id="hours-row-wrap">
-      <label>Uren (laat leeg voor standaard)</label>
-      <input type="number" id="modal-hours" min="0.5" max="24" step="0.5" placeholder="–">
-    </div>
-    <div style="margin-bottom:16px">
-      <label style="display:block;font-size:12px;color:var(--text2);font-weight:500;margin-bottom:5px">Notitie (bijv. klantnaam)</label>
-      <input type="text" id="modal-note" maxlength="80" placeholder="Optioneel…"
-        style="width:100%;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;font-family:inherit;background:var(--bg);color:var(--text);">
-    </div>
-    <hr class="divider" style="margin:14px 0">
-    <div class="middelen-section">
-      <div class="middelen-label">Gebruikte middelen</div>
-      <div class="middelen-grid" id="modal-middelen"></div>
-    </div>
-    <div class="modal-btns" style="margin-top:16px">
-      <button class="btn-ghost" onclick="closeModal()">Annuleren</button>
-      <button class="btn-primary" onclick="saveEntry()">Opslaan</button>
-    </div>
-    <button class="btn-danger" id="btn-delete" onclick="deleteEntry()" style="display:none">Verwijder registratie</button>
-  </div>
-</div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+    // ── Firebase helpers ──────────────────────────────────────────────────────────
+    async function fbSave(docId, data) {
+      try { await setDoc(doc(db, "zzp", docId), { value: JSON.stringify(data) }); } catch (e) { console.warn("fbSave", e); }
+    }
+    async function fbLoad(docId, fallback) {
+      try {
+        const snap = await getDoc(doc(db, "zzp", docId));
+        if (snap.exists()) return JSON.parse(snap.data().value);
+      } catch (e) { console.warn("fbLoad", e); }
+      return fallback;
+    }
+    async function fbDelete(docId) {
+      try { await deleteDoc(doc(db, "zzp", docId)); } catch (e) { console.warn("fbDelete", e); }
+    }
+    const BUILTIN_TYPES = [
+      { key: "klant", label: "Klantbezoek", color: "#16a34a", bg: "#f0fdf4", text: "#15803d" },
+      { key: "fs8", label: "FS Groen 8u", color: "#0e7490", bg: "#ecfeff", text: "#155e75" },
+      { key: "fs9", label: "FS Groen 9u", color: "#0284c7", bg: "#e0f2fe", text: "#075985" },
+      { key: "fs10", label: "FS Groen 10u", color: "#2563eb", bg: "#eff6ff", text: "#1d4ed8" },
+      { key: "fs11", label: "FS Groen 11u", color: "#7c3aed", bg: "#f5f3ff", text: "#5b21b6" },
+      { key: "fs12", label: "FS Groen 12u", color: "#be185d", bg: "#fdf2f8", text: "#9d174d" },
+      { key: "werkdag", label: "Werkdag", color: "#d97706", bg: "#fffbeb", text: "#b45309" },
+      { key: "ziekte", label: "Ziekte", color: "#dc2626", bg: "#fef2f2", text: "#b91c1c", excludeFromTotal: true },
+      { key: "ziekenhuis", label: "Ziekenhuis", color: "#9f1239", bg: "#fff1f2", text: "#881337", excludeFromTotal: true },
+    ];
+    let deletedBuiltin = JSON.parse(localStorage.getItem("zzp_deleted") || "[]");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCfpFyQPkqCmQBGNLxHHS33dfI22CVVUx4",
-  authDomain: "uren-registratie-d3ba4.firebaseapp.com",
-  projectId: "uren-registratie-d3ba4",
-  storageBucket: "uren-registratie-d3ba4.firebasestorage.app",
-  messagingSenderId: "737571663966",
-  appId: "1:737571663966:web:9136a5d4f75d9cda0a84cf"
-};
+    const BUILTIN_MIDDELEN = [
+      { key: "bestrijding", label: "Bestrijdingsmiddelen" },
+      { key: "bemesting", label: "Bemesting" },
+    ];
+    let customMiddelen = JSON.parse(localStorage.getItem("zzp_middelen") || "[]");
+    const allMiddelen = () => [...BUILTIN_MIDDELEN, ...customMiddelen];
+    let selectedMiddelen = []; // keys of selected middelen for current modal
+    let TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+    // Start with localStorage as cache, Firebase will override on load
+    let entries = JSON.parse(localStorage.getItem("zzp_entries") || "{}");
+    let hours = JSON.parse(localStorage.getItem("zzp_hours") || '{"klant":2,"fs8":8,"fs9":9,"fs10":10,"fs11":11,"fs12":12,"werkdag":8,"ziekte":0,"ziekenhuis":0}');
+    let customTypes = JSON.parse(localStorage.getItem("zzp_custom") || "[]");
+    let cur = { year: new Date().getFullYear(), month: new Date().getMonth() };
+    let modalKey = null;
+    let selectedType = null;
+    let addModalOpen = false;
+    let newTypeColor = "#6366f1";
+    let newTypeExclude = false;
 
-// ── Firebase helpers ──────────────────────────────────────────────────────────
-async function fbSave(docId, data) {
-  try { await setDoc(doc(db, "zzp", docId), { value: JSON.stringify(data) }); } catch(e) { console.warn("fbSave", e); }
-}
-async function fbLoad(docId, fallback) {
-  try {
-    const snap = await getDoc(doc(db, "zzp", docId));
-    if (snap.exists()) return JSON.parse(snap.data().value);
-  } catch(e) { console.warn("fbLoad", e); }
-  return fallback;
-}
-async function fbDelete(docId) {
-  try { await deleteDoc(doc(db, "zzp", docId)); } catch(e) { console.warn("fbDelete", e); }
-}
-const BUILTIN_TYPES = [
-  { key:"klant",     label:"Klantbezoek", color:"#16a34a", bg:"#f0fdf4", text:"#15803d" },
-  { key:"fs8",       label:"FS Groen 8u",  color:"#0e7490", bg:"#ecfeff", text:"#155e75" },
-  { key:"fs9",       label:"FS Groen 9u",  color:"#0284c7", bg:"#e0f2fe", text:"#075985" },
-  { key:"fs10",      label:"FS Groen 10u", color:"#2563eb", bg:"#eff6ff", text:"#1d4ed8" },
-  { key:"fs11",      label:"FS Groen 11u", color:"#7c3aed", bg:"#f5f3ff", text:"#5b21b6" },
-  { key:"fs12",      label:"FS Groen 12u", color:"#be185d", bg:"#fdf2f8", text:"#9d174d" },
-  { key:"werkdag",   label:"Werkdag",      color:"#d97706", bg:"#fffbeb", text:"#b45309" },
-  { key:"ziekte",    label:"Ziekte",       color:"#dc2626", bg:"#fef2f2", text:"#b91c1c", excludeFromTotal: true },
-  { key:"ziekenhuis",label:"Ziekenhuis",   color:"#9f1239", bg:"#fff1f2", text:"#881337", excludeFromTotal: true },
-];
-let deletedBuiltin   = JSON.parse(localStorage.getItem("zzp_deleted")   || "[]");
+    let yearGoal = JSON.parse(localStorage.getItem("zzp_yeargoal") || "1800");
 
-const BUILTIN_MIDDELEN = [
-  { key:"bestrijding", label:"Bestrijdingsmiddelen" },
-  { key:"bemesting",   label:"Bemesting" },
-];
-let customMiddelen   = JSON.parse(localStorage.getItem("zzp_middelen") || "[]");
-const allMiddelen    = () => [...BUILTIN_MIDDELEN, ...customMiddelen];
-let selectedMiddelen = []; // keys of selected middelen for current modal
-let TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
+    const PALETTE = [
+      "#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444",
+      "#8b5cf6", "#ec4899", "#14b8a6", "#f97316", "#64748b"
+    ];
 
-// Start with localStorage as cache, Firebase will override on load
-let entries     = JSON.parse(localStorage.getItem("zzp_entries")  || "{}");
-let hours       = JSON.parse(localStorage.getItem("zzp_hours")    || '{"klant":2,"fs8":8,"fs9":9,"fs10":10,"fs11":11,"fs12":12,"werkdag":8,"ziekte":0,"ziekenhuis":0}');
-let customTypes = JSON.parse(localStorage.getItem("zzp_custom")   || "[]");
-let cur = { year: new Date().getFullYear(), month: new Date().getMonth() };
-let modalKey = null;
-let selectedType = null;
-let addModalOpen = false;
-let newTypeColor = "#6366f1";
-let newTypeExclude = false;
+    const allTypes = () => [...TYPES, ...customTypes];
+    const typeOf = k => allTypes().find(t => t.key === k);
 
-let yearGoal = JSON.parse(localStorage.getItem("zzp_yeargoal") || "1800");
-
-const PALETTE = [
-  "#6366f1","#0ea5e9","#10b981","#f59e0b","#ef4444",
-  "#8b5cf6","#ec4899","#14b8a6","#f97316","#64748b"
-];
-
-const allTypes = () => [...TYPES, ...customTypes];
-const typeOf   = k => allTypes().find(t => t.key === k);
-
-const saveAll = () => {
-  // Save to localStorage (cache)
-  localStorage.setItem("zzp_entries",  JSON.stringify(entries));
-  localStorage.setItem("zzp_hours",    JSON.stringify(hours));
-  localStorage.setItem("zzp_custom",   JSON.stringify(customTypes));
-  localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
-  localStorage.setItem("zzp_deleted",  JSON.stringify(deletedBuiltin));
-  localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
-  // Save to Firebase (sync)
-  fbSave("entries",      entries);
-  fbSave("hours",        hours);
-  fbSave("customTypes",  customTypes);
-  fbSave("yearGoal",     yearGoal);
-  fbSave("deletedBuiltin", deletedBuiltin);
-  fbSave("customMiddelen", customMiddelen);
-};
+    const saveAll = () => {
+      // Save to localStorage (cache)
+      localStorage.setItem("zzp_entries", JSON.stringify(entries));
+      localStorage.setItem("zzp_hours", JSON.stringify(hours));
+      localStorage.setItem("zzp_custom", JSON.stringify(customTypes));
+      localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
+      localStorage.setItem("zzp_deleted", JSON.stringify(deletedBuiltin));
+      localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
+      // Save to Firebase (sync)
+      fbSave("entries", entries);
+      fbSave("hours", hours);
+      fbSave("customTypes", customTypes);
+      fbSave("yearGoal", yearGoal);
+      fbSave("deletedBuiltin", deletedBuiltin);
+      fbSave("customMiddelen", customMiddelen);
+    };
 
 
 
-const pad = n => String(n).padStart(2,"0");
-const dayKey = (y,m,d) => `${y}-${pad(m+1)}-${pad(d)}`;
+    const pad = n => String(n).padStart(2, "0");
+    const dayKey = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
 
-const NL_MONTHS = ["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
-const NL_DAYS   = ["zo","ma","di","wo","do","vr","za"];
+    const NL_MONTHS = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+    const NL_DAYS = ["zo", "ma", "di", "wo", "do", "vr", "za"];
 
-function getHours(t) {
-  return hours[t.key] !== undefined ? hours[t.key] : 0;
-}
+    function getHours(t) {
+      return hours[t.key] !== undefined ? hours[t.key] : 0;
+    }
 
-function typeCard(t) {
-  return `<div class="setting-card">
+    function typeCard(t) {
+      return `<div class="setting-card">
     <div class="setting-top">
       <div class="s-dot" style="background:${t.color}"></div>
       <span class="s-name" style="flex:1">${t.label}</span>
@@ -644,453 +1255,453 @@ function typeCard(t) {
     </div>
     ${t.excludeFromTotal ? '<div style="font-size:11px;color:var(--text3);margin-top:4px">Telt niet mee in totaal</div>' : ''}
   </div>`;
-}
-function renderSettings() {
-  const addBtn = `<div class="setting-card add-card" onclick="openAddModal()">&#43; Nieuw onderdeel</div>`;
-  document.getElementById("settings-grid").innerHTML =
-    TYPES.map(typeCard).join("") + customTypes.map(typeCard).join("") + addBtn;
-}
-
-function renderCalendar() {
-  const { year, month } = cur;
-  const today = new Date();
-  const firstDow = new Date(year, month, 1).getDay(); // 0=Sun
-  const offset   = (firstDow + 6) % 7; // Mon=0
-  const days     = new Date(year, month + 1, 0).getDate();
-
-  document.getElementById("month-title").textContent =
-    NL_MONTHS[month].charAt(0).toUpperCase() + NL_MONTHS[month].slice(1) + " " + year;
-  document.getElementById("hdr-sub").textContent =
-    "Werkjaar " + year;
-
-  const getWeekNum = (date) => {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const dayNum = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  };
-
-  let cells = "";
-  let colPos = offset; // track position in 7-col grid (0=Mon)
-  // inject week number cell before first day
-  if (offset > 0) {
-    const firstWeek = getWeekNum(new Date(year, month, 1));
-    cells += `<div class="week-num">${firstWeek}</div>`;
-    for (let i = 0; i < offset; i++) cells += `<div class="day-cell empty"></div>`;
-  }
-  for (let d = 1; d <= days; d++) {
-    const dateObj = new Date(year, month, d);
-    const dow    = (dateObj.getDay() + 6) % 7; // Mon=0
-    // inject week number at start of each new row (Monday or day 1)
-    if (dow === 0) {
-      cells += `<div class="week-num">${getWeekNum(dateObj)}</div>`;
     }
-    const dk     = dayKey(year, month, d);
-    const entry  = entries[dk];
-    const t      = entry && entry.type ? typeOf(entry.type) : null;
-    const isWE   = dow >= 5;
-    const isTod  = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
-    let pill = "";
-    if (t) {
-      const h = entry.hours !== undefined ? entry.hours : getHours(t);
-      const noteText    = entry.note ? `<div class="day-note">${entry.note}</div>` : "";
-      const middelenText = entry.middelen && entry.middelen.length
-        ? `<div class="day-middelen">🌿 ${entry.middelen.map(k => allMiddelen().find(m=>m.key===k)?.label||k).join(", ")}</div>`
-        : "";
-      pill = `<div class="act-pill" style="background:${t.bg};color:${t.text}">${t.label}</div>
+    function renderSettings() {
+      const addBtn = `<div class="setting-card add-card" onclick="openAddModal()">&#43; Nieuw onderdeel</div>`;
+      document.getElementById("settings-grid").innerHTML =
+        TYPES.map(typeCard).join("") + customTypes.map(typeCard).join("") + addBtn;
+    }
+
+    function renderCalendar() {
+      const { year, month } = cur;
+      const today = new Date();
+      const firstDow = new Date(year, month, 1).getDay(); // 0=Sun
+      const offset = (firstDow + 6) % 7; // Mon=0
+      const days = new Date(year, month + 1, 0).getDate();
+
+      document.getElementById("month-title").textContent =
+        NL_MONTHS[month].charAt(0).toUpperCase() + NL_MONTHS[month].slice(1) + " " + year;
+      document.getElementById("hdr-sub").textContent =
+        "Werkjaar " + year;
+
+      const getWeekNum = (date) => {
+        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const dayNum = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      };
+
+      let cells = "";
+      let colPos = offset; // track position in 7-col grid (0=Mon)
+      // inject week number cell before first day
+      if (offset > 0) {
+        const firstWeek = getWeekNum(new Date(year, month, 1));
+        cells += `<div class="week-num">${firstWeek}</div>`;
+        for (let i = 0; i < offset; i++) cells += `<div class="day-cell empty"></div>`;
+      }
+      for (let d = 1; d <= days; d++) {
+        const dateObj = new Date(year, month, d);
+        const dow = (dateObj.getDay() + 6) % 7; // Mon=0
+        // inject week number at start of each new row (Monday or day 1)
+        if (dow === 0) {
+          cells += `<div class="week-num">${getWeekNum(dateObj)}</div>`;
+        }
+        const dk = dayKey(year, month, d);
+        const entry = entries[dk];
+        const t = entry && entry.type ? typeOf(entry.type) : null;
+        const isWE = dow >= 5;
+        const isTod = today.getFullYear() === year && today.getMonth() === month && today.getDate() === d;
+        let pill = "";
+        if (t) {
+          const h = entry.hours !== undefined ? entry.hours : getHours(t);
+          const noteText = entry.note ? `<div class="day-note">${entry.note}</div>` : "";
+          const middelenText = entry.middelen && entry.middelen.length
+            ? `<div class="day-middelen">🌿 ${entry.middelen.map(k => allMiddelen().find(m => m.key === k)?.label || k).join(", ")}</div>`
+            : "";
+          pill = `<div class="act-pill" style="background:${t.bg};color:${t.text}">${t.label}</div>
               <div class="day-hrs">${h}u</div>${noteText}${middelenText}`;
-    }
-    cells += `<div class="day-cell${isWE?' weekend':''}${isTod?' today':''}"
+        }
+        cells += `<div class="day-cell${isWE ? ' weekend' : ''}${isTod ? ' today' : ''}"
         onclick="openModal('${dk}',${d})">
         <div class="day-num">${d}</div>${pill}</div>`;
-  }
-  document.getElementById("cal-grid").innerHTML = cells;
-}
-
-function renderSummary() {
-  const { year, month } = cur;
-  const prefix = `${year}-${pad(month+1)}`;
-  let totalHours = 0, totalDays = 0, sickDays = 0;
-  Object.entries(entries).forEach(([k,v]) => {
-    if (k.startsWith(prefix) && v.type) {
-      const t = typeOf(v.type);
-      if (!t) return;
-      if (t.excludeFromTotal) { sickDays++; }
-      else { totalHours += v.hours !== undefined ? +v.hours : getHours(t); totalDays++; }
+      }
+      document.getElementById("cal-grid").innerHTML = cells;
     }
-  });
-  const sickHtml = sickDays > 0
-    ? `<div class="sum-sick">${sickDays} dag${sickDays!==1?"en":""} niet gewerkt (ziekte/ziekenhuis)</div>`
-    : "";
-  document.getElementById("summary").innerHTML = `
+
+    function renderSummary() {
+      const { year, month } = cur;
+      const prefix = `${year}-${pad(month + 1)}`;
+      let totalHours = 0, totalDays = 0, sickDays = 0;
+      Object.entries(entries).forEach(([k, v]) => {
+        if (k.startsWith(prefix) && v.type) {
+          const t = typeOf(v.type);
+          if (!t) return;
+          if (t.excludeFromTotal) { sickDays++; }
+          else { totalHours += v.hours !== undefined ? +v.hours : getHours(t); totalDays++; }
+        }
+      });
+      const sickHtml = sickDays > 0
+        ? `<div class="sum-sick">${sickDays} dag${sickDays !== 1 ? "en" : ""} niet gewerkt (ziekte/ziekenhuis)</div>`
+        : "";
+      document.getElementById("summary").innerHTML = `
     <div class="sum-card">
-      <div class="sum-num">${totalHours.toFixed(1).replace(/\.0$/,"")}</div>
+      <div class="sum-num">${totalHours.toFixed(1).replace(/\.0$/, "")}</div>
       <div><div class="sum-lbl">Totaal uren deze maand</div>
-      <div class="sum-sub">${totalDays} dag${totalDays!==1?"en":""} geregistreerd</div>
+      <div class="sum-sub">${totalDays} dag${totalDays !== 1 ? "en" : ""} geregistreerd</div>
       ${sickHtml}</div>
     </div>`;
-}
+    }
 
-function openModal(dk, day) {
-  modalKey = dk;
-  const entry = entries[dk];
-  selectedType = entry ? entry.type : null;
+    function openModal(dk, day) {
+      modalKey = dk;
+      const entry = entries[dk];
+      selectedType = entry ? entry.type : null;
 
-  const d = new Date(cur.year, cur.month, day);
-  const dagNaam = NL_DAYS[d.getDay()];
-  document.getElementById("modal-title").textContent = `${dagNaam.charAt(0).toUpperCase()+dagNaam.slice(1)} ${day} ${NL_MONTHS[cur.month]}`;
-  document.getElementById("modal-date").textContent = `${cur.year}`;
+      const d = new Date(cur.year, cur.month, day);
+      const dagNaam = NL_DAYS[d.getDay()];
+      document.getElementById("modal-title").textContent = `${dagNaam.charAt(0).toUpperCase() + dagNaam.slice(1)} ${day} ${NL_MONTHS[cur.month]}`;
+      document.getElementById("modal-date").textContent = `${cur.year}`;
 
-  document.getElementById("modal-hours").value = entry && entry.hours !== undefined ? entry.hours : "";
-  document.getElementById("modal-note").value = entry && entry.note ? entry.note : "";
-  document.getElementById("btn-delete").style.display = entry ? "block" : "none";
-  selectedMiddelen = (entry && entry.middelen) ? [...entry.middelen] : [];
+      document.getElementById("modal-hours").value = entry && entry.hours !== undefined ? entry.hours : "";
+      document.getElementById("modal-note").value = entry && entry.note ? entry.note : "";
+      document.getElementById("btn-delete").style.display = entry ? "block" : "none";
+      selectedMiddelen = (entry && entry.middelen) ? [...entry.middelen] : [];
 
-  renderModalOpts();
-  renderMiddelen();
-  document.getElementById("modal-overlay").classList.add("open");
-}
+      renderModalOpts();
+      renderMiddelen();
+      document.getElementById("modal-overlay").classList.add("open");
+    }
 
-function renderModalOpts() {
-  document.getElementById("modal-opts").innerHTML = allTypes().map(t => {
-    const active = selectedType === t.key;
-    return `<button class="opt-btn${active?" active":""}"
-        style="${active?`border-color:${t.color};background:${t.bg};color:${t.text}`:""}"
+    function renderModalOpts() {
+      document.getElementById("modal-opts").innerHTML = allTypes().map(t => {
+        const active = selectedType === t.key;
+        return `<button class="opt-btn${active ? " active" : ""}"
+        style="${active ? `border-color:${t.color};background:${t.bg};color:${t.text}` : ""}"
         onclick="selectType('${t.key}')">
         <div class="opt-dot" style="background:${t.color}"></div>
         ${t.label}
         <span class="opt-default">${getHours(t)}u</span>
       </button>`;
-  }).join("");
-  document.getElementById("hours-row-wrap").style.display = selectedType ? "flex" : "none";
-}
+      }).join("");
+      document.getElementById("hours-row-wrap").style.display = selectedType ? "flex" : "none";
+    }
 
-function selectType(key) {
-  selectedType = selectedType === key ? null : key;
-  renderModalOpts();
-  if (selectedType) {
-    const t = typeOf(selectedType);
-    const inp = document.getElementById("modal-hours");
-    if (inp && !inp.value && t.fixedHours === undefined) inp.placeholder = hours[selectedType] || "";
-  }
-}
+    function selectType(key) {
+      selectedType = selectedType === key ? null : key;
+      renderModalOpts();
+      if (selectedType) {
+        const t = typeOf(selectedType);
+        const inp = document.getElementById("modal-hours");
+        if (inp && !inp.value && t.fixedHours === undefined) inp.placeholder = hours[selectedType] || "";
+      }
+    }
 
-function renderMiddelen() {
-  const grid = document.getElementById("modal-middelen");
-  if (!grid) return;
-  grid.innerHTML = allMiddelen().map(m => {
-    const active = selectedMiddelen.includes(m.key);
-    const isCustom = customMiddelen.some(c => c.key === m.key);
-    const isBuiltin = BUILTIN_MIDDELEN.some(b => b.key === m.key);
-    return `<div style="display:inline-flex;align-items:center;gap:2px;margin-bottom:4px">
-      <button class="middel-btn${active?" active":""}" onclick="toggleMiddel('${m.key}')" style="border-radius:99px 0 0 99px;border-right:none">
+    function renderMiddelen() {
+      const grid = document.getElementById("modal-middelen");
+      if (!grid) return;
+      grid.innerHTML = allMiddelen().map(m => {
+        const active = selectedMiddelen.includes(m.key);
+        const isCustom = customMiddelen.some(c => c.key === m.key);
+        const isBuiltin = BUILTIN_MIDDELEN.some(b => b.key === m.key);
+        return `<div style="display:inline-flex;align-items:center;gap:2px;margin-bottom:4px">
+      <button class="middel-btn${active ? " active" : ""}" onclick="toggleMiddel('${m.key}')" style="border-radius:99px 0 0 99px;border-right:none">
         ${active ? '<span class="middel-dot"></span>' : ''}${m.label}
       </button>
       <button onclick="openEditMiddelModal('${m.key}')" title="Aanpassen / verwijderen"
-        style="padding:6px 8px;border:1.5px solid var(--border2);border-left:none;border-radius:0 99px 99px 0;background:var(--surface);cursor:pointer;font-size:11px;color:var(--text3);${active?'border-color:#059669;background:#ecfdf5;color:#065f46':''}">✎</button>
+        style="padding:6px 8px;border:1.5px solid var(--border2);border-left:none;border-radius:0 99px 99px 0;background:var(--surface);cursor:pointer;font-size:11px;color:var(--text3);${active ? 'border-color:#059669;background:#ecfdf5;color:#065f46' : ''}">✎</button>
     </div>`;
-  }).join("") +
-  `<button class="middel-add-btn" onclick="openAddMiddelModal()">&#43; Nieuw middel</button>`;
-}
-
-function toggleMiddel(key) {
-  const i = selectedMiddelen.indexOf(key);
-  if (i === -1) selectedMiddelen.push(key);
-  else selectedMiddelen.splice(i, 1);
-  renderMiddelen();
-}
-
-let editMiddelKey = null; // null = add mode, string = edit mode
-function openAddMiddelModal() {
-  editMiddelKey = null;
-  document.getElementById("add-middel-title").textContent = "Nieuw middel toevoegen";
-  document.getElementById("new-middel-name").value = "";
-  document.getElementById("middel-delete-btn").style.display = "none";
-  document.getElementById("add-middel-overlay").classList.add("open");
-  setTimeout(() => document.getElementById("new-middel-name").focus(), 50);
-}
-
-function openEditMiddelModal(key) {
-  editMiddelKey = key;
-  const m = allMiddelen().find(x => x.key === key);
-  document.getElementById("add-middel-title").textContent = "Middel aanpassen";
-  document.getElementById("new-middel-name").value = m ? m.label : "";
-  // Only show delete button — both builtin and custom can be deleted
-  document.getElementById("middel-delete-btn").style.display = "block";
-  document.getElementById("add-middel-overlay").classList.add("open");
-  setTimeout(() => document.getElementById("new-middel-name").focus(), 50);
-}
-
-function closeAddMiddelModal() {
-  document.getElementById("add-middel-overlay").classList.remove("open");
-  editMiddelKey = null;
-}
-
-function saveNewMiddel() {
-  const name = document.getElementById("new-middel-name").value.trim();
-  if (!name) { document.getElementById("new-middel-name").focus(); return; }
-
-  if (editMiddelKey) {
-    // Edit mode: update label in customMiddelen or rename builtin via custom override
-    const customIdx = customMiddelen.findIndex(m => m.key === editMiddelKey);
-    if (customIdx !== -1) {
-      customMiddelen[customIdx].label = name;
-    } else {
-      // It's a builtin — store renamed version as custom override
-      // Remove from builtin display by adding to deletedBuiltinMiddelen, add as custom with same key logic
-      // Simpler: just store in a rename map
-      if (!window.renamedMiddelen) window.renamedMiddelen = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
-      window.renamedMiddelen[editMiddelKey] = name;
-      localStorage.setItem("zzp_middelen_rename", JSON.stringify(window.renamedMiddelen));
-      // Patch BUILTIN_MIDDELEN display
-      const bi = BUILTIN_MIDDELEN.find(m => m.key === editMiddelKey);
-      if (bi) bi.label = name;
+      }).join("") +
+        `<button class="middel-add-btn" onclick="openAddMiddelModal()">&#43; Nieuw middel</button>`;
     }
-  } else {
-    // Add mode
-    const key = "middel_" + Date.now();
-    customMiddelen.push({ key, label: name });
-  }
-  saveAll();
-  closeAddMiddelModal();
-  renderMiddelen();
-}
 
-function deleteMiddel() {
-  const key = editMiddelKey;
-  if (!key) return;
-  closeAddMiddelModal();
-  pendingMiddelDeleteKey = key;
-  const m = allMiddelen().find(x => x.key === key);
-  document.getElementById("confirm-middel-name").textContent = m ? m.label : key;
-  document.getElementById("confirm-middel-overlay").classList.add("open");
-}
-
-let pendingMiddelDeleteKey = null;
-function confirmMiddelDelete() {
-  const key = pendingMiddelDeleteKey;
-  document.getElementById("confirm-middel-overlay").classList.remove("open");
-  pendingMiddelDeleteKey = null;
-  // Remove from custom or mark builtin as deleted
-  const isCustom = customMiddelen.some(m => m.key === key);
-  if (isCustom) {
-    customMiddelen = customMiddelen.filter(m => m.key !== key);
-  } else {
-    // Hide builtin by adding to a deleted list
-    let deletedM = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
-    if (!deletedM.includes(key)) deletedM.push(key);
-    localStorage.setItem("zzp_deleted_middelen", JSON.stringify(deletedM));
-    const idx = BUILTIN_MIDDELEN.findIndex(m => m.key === key);
-    if (idx !== -1) BUILTIN_MIDDELEN.splice(idx, 1);
-  }
-  // Remove from any entries
-  Object.values(entries).forEach(v => {
-    if (v.middelen) v.middelen = v.middelen.filter(k => k !== key);
-  });
-  selectedMiddelen = selectedMiddelen.filter(k => k !== key);
-  saveAll();
-  renderMiddelen();
-  renderCalendar();
-}
-function cancelMiddelDelete() {
-  document.getElementById("confirm-middel-overlay").classList.remove("open");
-  pendingMiddelDeleteKey = null;
-}
-
-function closeModal() {
-  document.getElementById("modal-overlay").classList.remove("open");
-  modalKey = null;
-  selectedType = null;
-  selectedMiddelen = [];
-}
-
-function saveEntry() {
-  if (!selectedType) { closeModal(); return; }
-  const hoursVal = document.getElementById("modal-hours").value;
-  const noteVal  = document.getElementById("modal-note").value.trim();
-  entries[modalKey] = {
-    type:     selectedType,
-    hours:    hoursVal !== "" ? +hoursVal : undefined,
-    note:     noteVal || undefined,
-    middelen: selectedMiddelen.length ? [...selectedMiddelen] : undefined
-  };
-  saveAll();
-  closeModal();
-  renderCalendar();
-  renderSummary();
-  renderYearForecast();
-}
-
-function deleteEntry() {
-  delete entries[modalKey];
-  saveAll();
-  closeModal();
-  renderCalendar();
-  renderSummary();
-  renderYearForecast();
-}
-
-function prevMonth() {
-  if (cur.month === 0) { cur.month = 11; cur.year--; }
-  else cur.month--;
-  renderCalendar(); renderSummary(); renderYearForecast();
-}
-function nextMonth() {
-  if (cur.month === 11) { cur.month = 0; cur.year++; }
-  else cur.month++;
-  renderCalendar(); renderSummary(); renderYearForecast();
-}
-
-function exportExcel() {
-  const NL_DAYS_SHORT = ["zo","ma","di","wo","do","vr","za"];
-  const getWeekNumExport = (date) => {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const day = d.getUTCDay() || 7;
-    d.setUTCDate(d.getUTCDate() + 4 - day);
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  };
-  const rows = [["Datum","Dag","Week","Type","Uren","Telt mee in totaal","Notitie","Middelen"]];
-  Object.entries(entries).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,v]) => {
-    if (!v.type) return;
-    const d = new Date(k);
-    const t2 = typeOf(v.type);
-    const h = v.hours !== undefined ? v.hours : (t2 ? getHours(t2) : 0);
-    rows.push([
-      k,
-      NL_DAYS_SHORT[d.getDay()],
-      getWeekNumExport(d),
-      t2?.label || v.type,
-      h,
-      t2?.excludeFromTotal ? "Nee" : "Ja",
-      v.note || "",
-      (v.middelen||[]).map(k => allMiddelen().find(m=>m.key===k)?.label||k).join(", ")
-    ]);
-  });
-  // Build CSV with semicolons (Excel NL default) and UTF-8 BOM
-  const csv = "\uFEFF" + rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(";")).join("\r\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "Urenregistratie_ZZP.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-let pendingDeleteKey = null;
-
-function deleteCustomType(key) {
-  pendingDeleteKey = key;
-  const t = allTypes().find(t => t.key === key);
-  document.getElementById("confirm-delete-name").textContent = t ? t.label : key;
-  document.getElementById("confirm-delete-overlay").classList.add("open");
-}
-
-function confirmDelete() {
-  const key = pendingDeleteKey;
-  if (!key) return;
-  document.getElementById("confirm-delete-overlay").classList.remove("open");
-  pendingDeleteKey = null;
-  if (BUILTIN_TYPES.some(t => t.key === key)) {
-    deletedBuiltin.push(key);
-    TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
-  } else {
-    customTypes = customTypes.filter(t => t.key !== key);
-  }
-  Object.keys(entries).forEach(k => { if (entries[k] && entries[k].type === key) delete entries[k]; });
-  saveAll();
-  renderSettings();
-  renderCalendar();
-  renderSummary();
-  renderYearForecast();
-}
-
-function cancelDelete() {
-  pendingDeleteKey = null;
-  document.getElementById("confirm-delete-overlay").classList.remove("open");
-}
-
-function openAddModal() {
-  newTypeColor = PALETTE[0];
-  newTypeExclude = false;
-  document.getElementById("add-modal-overlay").classList.add("open");
-  document.getElementById("new-name").value = "";
-  document.getElementById("new-hours").value = "8";
-  document.getElementById("new-exclude").checked = false;
-  renderColorPicker();
-}
-function closeAddModal() {
-  document.getElementById("add-modal-overlay").classList.remove("open");
-}
-function renderColorPicker() {
-  document.getElementById("color-picker").innerHTML = PALETTE.map(c =>
-    `<div class="color-opt${c===newTypeColor?' selected':''}" style="background:${c}" onclick="newTypeColor='${c}';renderColorPicker()"></div>`
-  ).join("");
-}
-function saveCustomType() {
-  const name = document.getElementById("new-name").value.trim();
-  if (!name) { document.getElementById("new-name").focus(); return; }
-  const hrs  = +document.getElementById("new-hours").value || 0;
-  const excl = document.getElementById("new-exclude").checked;
-  const key  = "custom_" + Date.now();
-  // derive light bg and dark text from color
-  const hex = newTypeColor;
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  const bg   = `rgba(${r},${g},${b},0.12)`;
-  const text = `rgb(${Math.round(r*.6)},${Math.round(g*.6)},${Math.round(b*.6)})`;
-  customTypes.push({ key, label: name, color: hex, bg, text, ...(excl ? {excludeFromTotal:true} : {}) });
-  hours[key] = hrs;
-  saveAll();
-  closeAddModal();
-  renderSettings();
-  renderModalOpts();
-}
-
-function renderYearForecast() {
-  const year = cur.year;
-  const today = new Date();
-
-  // Total hours logged this year (excluding sick)
-  let yearTotal = 0;
-  Object.entries(entries).forEach(([k, v]) => {
-    if (!k.startsWith(year + "-") || !v.type) return;
-    const t = typeOf(v.type);
-    if (!t || t.excludeFromTotal) return;
-    yearTotal += v.hours !== undefined ? +v.hours : getHours(t);
-  });
-
-  // Days elapsed this year (up to and including today, or end of year)
-  const yearStart = new Date(year, 0, 1);
-  const yearEnd   = new Date(year, 11, 31);
-  const refDate   = today.getFullYear() === year ? today : (today > yearEnd ? yearEnd : yearStart);
-  const totalDaysInYear = 366; // safe upper bound; precise below
-  const daysInYear = Math.round((new Date(year+1,0,1) - yearStart) / 86400000);
-  const daysPassed = Math.max(1, Math.round((refDate - yearStart) / 86400000) + 1);
-  const daysLeft   = daysInYear - daysPassed;
-
-  // Expected hours by now based on linear goal
-  const expectedNow = yearGoal * (daysPassed / daysInYear);
-  const diff        = yearTotal - expectedNow;
-  const projection  = yearTotal * (daysInYear / daysPassed); // extrapolate
-  const pct         = Math.min(100, Math.round((yearTotal / yearGoal) * 100));
-  const barColor    = pct >= 100 ? "#16a34a" : diff >= 0 ? "#2563eb" : "#d97706";
-
-  // Forecast message
-  let forecastHtml = "";
-  if (today.getFullYear() === year) {
-    const absDiff = Math.abs(diff).toFixed(1).replace(/\.0$/, "");
-    if (diff >= 5) {
-      forecastHtml = `<div class="forecast-line forecast-ahead">&#9650; Je loopt <strong>${absDiff} uur voor</strong> op schema — op dit tempo eindig je het jaar op <strong>${Math.round(projection)} uur</strong>.</div>`;
-    } else if (diff <= -5) {
-      forecastHtml = `<div class="forecast-line forecast-behind">&#9660; Je loopt <strong>${absDiff} uur achter</strong> op schema — op dit tempo eindig je het jaar op <strong>${Math.round(projection)} uur</strong>.</div>`;
-    } else {
-      forecastHtml = `<div class="forecast-line forecast-ok">&#9654; Je zit precies op schema voor ${yearGoal} uur.</div>`;
+    function toggleMiddel(key) {
+      const i = selectedMiddelen.indexOf(key);
+      if (i === -1) selectedMiddelen.push(key);
+      else selectedMiddelen.splice(i, 1);
+      renderMiddelen();
     }
-  }
 
-  document.getElementById("year-section").innerHTML = `
+    let editMiddelKey = null; // null = add mode, string = edit mode
+    function openAddMiddelModal() {
+      editMiddelKey = null;
+      document.getElementById("add-middel-title").textContent = "Nieuw middel toevoegen";
+      document.getElementById("new-middel-name").value = "";
+      document.getElementById("middel-delete-btn").style.display = "none";
+      document.getElementById("add-middel-overlay").classList.add("open");
+      setTimeout(() => document.getElementById("new-middel-name").focus(), 50);
+    }
+
+    function openEditMiddelModal(key) {
+      editMiddelKey = key;
+      const m = allMiddelen().find(x => x.key === key);
+      document.getElementById("add-middel-title").textContent = "Middel aanpassen";
+      document.getElementById("new-middel-name").value = m ? m.label : "";
+      // Only show delete button — both builtin and custom can be deleted
+      document.getElementById("middel-delete-btn").style.display = "block";
+      document.getElementById("add-middel-overlay").classList.add("open");
+      setTimeout(() => document.getElementById("new-middel-name").focus(), 50);
+    }
+
+    function closeAddMiddelModal() {
+      document.getElementById("add-middel-overlay").classList.remove("open");
+      editMiddelKey = null;
+    }
+
+    function saveNewMiddel() {
+      const name = document.getElementById("new-middel-name").value.trim();
+      if (!name) { document.getElementById("new-middel-name").focus(); return; }
+
+      if (editMiddelKey) {
+        // Edit mode: update label in customMiddelen or rename builtin via custom override
+        const customIdx = customMiddelen.findIndex(m => m.key === editMiddelKey);
+        if (customIdx !== -1) {
+          customMiddelen[customIdx].label = name;
+        } else {
+          // It's a builtin — store renamed version as custom override
+          // Remove from builtin display by adding to deletedBuiltinMiddelen, add as custom with same key logic
+          // Simpler: just store in a rename map
+          if (!window.renamedMiddelen) window.renamedMiddelen = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
+          window.renamedMiddelen[editMiddelKey] = name;
+          localStorage.setItem("zzp_middelen_rename", JSON.stringify(window.renamedMiddelen));
+          // Patch BUILTIN_MIDDELEN display
+          const bi = BUILTIN_MIDDELEN.find(m => m.key === editMiddelKey);
+          if (bi) bi.label = name;
+        }
+      } else {
+        // Add mode
+        const key = "middel_" + Date.now();
+        customMiddelen.push({ key, label: name });
+      }
+      saveAll();
+      closeAddMiddelModal();
+      renderMiddelen();
+    }
+
+    function deleteMiddel() {
+      const key = editMiddelKey;
+      if (!key) return;
+      closeAddMiddelModal();
+      pendingMiddelDeleteKey = key;
+      const m = allMiddelen().find(x => x.key === key);
+      document.getElementById("confirm-middel-name").textContent = m ? m.label : key;
+      document.getElementById("confirm-middel-overlay").classList.add("open");
+    }
+
+    let pendingMiddelDeleteKey = null;
+    function confirmMiddelDelete() {
+      const key = pendingMiddelDeleteKey;
+      document.getElementById("confirm-middel-overlay").classList.remove("open");
+      pendingMiddelDeleteKey = null;
+      // Remove from custom or mark builtin as deleted
+      const isCustom = customMiddelen.some(m => m.key === key);
+      if (isCustom) {
+        customMiddelen = customMiddelen.filter(m => m.key !== key);
+      } else {
+        // Hide builtin by adding to a deleted list
+        let deletedM = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
+        if (!deletedM.includes(key)) deletedM.push(key);
+        localStorage.setItem("zzp_deleted_middelen", JSON.stringify(deletedM));
+        const idx = BUILTIN_MIDDELEN.findIndex(m => m.key === key);
+        if (idx !== -1) BUILTIN_MIDDELEN.splice(idx, 1);
+      }
+      // Remove from any entries
+      Object.values(entries).forEach(v => {
+        if (v.middelen) v.middelen = v.middelen.filter(k => k !== key);
+      });
+      selectedMiddelen = selectedMiddelen.filter(k => k !== key);
+      saveAll();
+      renderMiddelen();
+      renderCalendar();
+    }
+    function cancelMiddelDelete() {
+      document.getElementById("confirm-middel-overlay").classList.remove("open");
+      pendingMiddelDeleteKey = null;
+    }
+
+    function closeModal() {
+      document.getElementById("modal-overlay").classList.remove("open");
+      modalKey = null;
+      selectedType = null;
+      selectedMiddelen = [];
+    }
+
+    function saveEntry() {
+      if (!selectedType) { closeModal(); return; }
+      const hoursVal = document.getElementById("modal-hours").value;
+      const noteVal = document.getElementById("modal-note").value.trim();
+      entries[modalKey] = {
+        type: selectedType,
+        hours: hoursVal !== "" ? +hoursVal : undefined,
+        note: noteVal || undefined,
+        middelen: selectedMiddelen.length ? [...selectedMiddelen] : undefined
+      };
+      saveAll();
+      closeModal();
+      renderCalendar();
+      renderSummary();
+      renderYearForecast();
+    }
+
+    function deleteEntry() {
+      delete entries[modalKey];
+      saveAll();
+      closeModal();
+      renderCalendar();
+      renderSummary();
+      renderYearForecast();
+    }
+
+    function prevMonth() {
+      if (cur.month === 0) { cur.month = 11; cur.year--; }
+      else cur.month--;
+      renderCalendar(); renderSummary(); renderYearForecast();
+    }
+    function nextMonth() {
+      if (cur.month === 11) { cur.month = 0; cur.year++; }
+      else cur.month++;
+      renderCalendar(); renderSummary(); renderYearForecast();
+    }
+
+    function exportExcel() {
+      const NL_DAYS_SHORT = ["zo", "ma", "di", "wo", "do", "vr", "za"];
+      const getWeekNumExport = (date) => {
+        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const day = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - day);
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      };
+      const rows = [["Datum", "Dag", "Week", "Type", "Uren", "Telt mee in totaal", "Notitie", "Middelen"]];
+      Object.entries(entries).sort((a, b) => a[0].localeCompare(b[0])).forEach(([k, v]) => {
+        if (!v.type) return;
+        const d = new Date(k);
+        const t2 = typeOf(v.type);
+        const h = v.hours !== undefined ? v.hours : (t2 ? getHours(t2) : 0);
+        rows.push([
+          k,
+          NL_DAYS_SHORT[d.getDay()],
+          getWeekNumExport(d),
+          t2?.label || v.type,
+          h,
+          t2?.excludeFromTotal ? "Nee" : "Ja",
+          v.note || "",
+          (v.middelen || []).map(k => allMiddelen().find(m => m.key === k)?.label || k).join(", ")
+        ]);
+      });
+      // Build CSV with semicolons (Excel NL default) and UTF-8 BOM
+      const csv = "\uFEFF" + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Urenregistratie_ZZP.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    let pendingDeleteKey = null;
+
+    function deleteCustomType(key) {
+      pendingDeleteKey = key;
+      const t = allTypes().find(t => t.key === key);
+      document.getElementById("confirm-delete-name").textContent = t ? t.label : key;
+      document.getElementById("confirm-delete-overlay").classList.add("open");
+    }
+
+    function confirmDelete() {
+      const key = pendingDeleteKey;
+      if (!key) return;
+      document.getElementById("confirm-delete-overlay").classList.remove("open");
+      pendingDeleteKey = null;
+      if (BUILTIN_TYPES.some(t => t.key === key)) {
+        deletedBuiltin.push(key);
+        TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
+      } else {
+        customTypes = customTypes.filter(t => t.key !== key);
+      }
+      Object.keys(entries).forEach(k => { if (entries[k] && entries[k].type === key) delete entries[k]; });
+      saveAll();
+      renderSettings();
+      renderCalendar();
+      renderSummary();
+      renderYearForecast();
+    }
+
+    function cancelDelete() {
+      pendingDeleteKey = null;
+      document.getElementById("confirm-delete-overlay").classList.remove("open");
+    }
+
+    function openAddModal() {
+      newTypeColor = PALETTE[0];
+      newTypeExclude = false;
+      document.getElementById("add-modal-overlay").classList.add("open");
+      document.getElementById("new-name").value = "";
+      document.getElementById("new-hours").value = "8";
+      document.getElementById("new-exclude").checked = false;
+      renderColorPicker();
+    }
+    function closeAddModal() {
+      document.getElementById("add-modal-overlay").classList.remove("open");
+    }
+    function renderColorPicker() {
+      document.getElementById("color-picker").innerHTML = PALETTE.map(c =>
+        `<div class="color-opt${c === newTypeColor ? ' selected' : ''}" style="background:${c}" onclick="newTypeColor='${c}';renderColorPicker()"></div>`
+      ).join("");
+    }
+    function saveCustomType() {
+      const name = document.getElementById("new-name").value.trim();
+      if (!name) { document.getElementById("new-name").focus(); return; }
+      const hrs = +document.getElementById("new-hours").value || 0;
+      const excl = document.getElementById("new-exclude").checked;
+      const key = "custom_" + Date.now();
+      // derive light bg and dark text from color
+      const hex = newTypeColor;
+      const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+      const bg = `rgba(${r},${g},${b},0.12)`;
+      const text = `rgb(${Math.round(r * .6)},${Math.round(g * .6)},${Math.round(b * .6)})`;
+      customTypes.push({ key, label: name, color: hex, bg, text, ...(excl ? { excludeFromTotal: true } : {}) });
+      hours[key] = hrs;
+      saveAll();
+      closeAddModal();
+      renderSettings();
+      renderModalOpts();
+    }
+
+    function renderYearForecast() {
+      const year = cur.year;
+      const today = new Date();
+
+      // Total hours logged this year (excluding sick)
+      let yearTotal = 0;
+      Object.entries(entries).forEach(([k, v]) => {
+        if (!k.startsWith(year + "-") || !v.type) return;
+        const t = typeOf(v.type);
+        if (!t || t.excludeFromTotal) return;
+        yearTotal += v.hours !== undefined ? +v.hours : getHours(t);
+      });
+
+      // Days elapsed this year (up to and including today, or end of year)
+      const yearStart = new Date(year, 0, 1);
+      const yearEnd = new Date(year, 11, 31);
+      const refDate = today.getFullYear() === year ? today : (today > yearEnd ? yearEnd : yearStart);
+      const totalDaysInYear = 366; // safe upper bound; precise below
+      const daysInYear = Math.round((new Date(year + 1, 0, 1) - yearStart) / 86400000);
+      const daysPassed = Math.max(1, Math.round((refDate - yearStart) / 86400000) + 1);
+      const daysLeft = daysInYear - daysPassed;
+
+      // Expected hours by now based on linear goal
+      const expectedNow = yearGoal * (daysPassed / daysInYear);
+      const diff = yearTotal - expectedNow;
+      const projection = yearTotal * (daysInYear / daysPassed); // extrapolate
+      const pct = Math.min(100, Math.round((yearTotal / yearGoal) * 100));
+      const barColor = pct >= 100 ? "#16a34a" : diff >= 0 ? "#2563eb" : "#d97706";
+
+      // Forecast message
+      let forecastHtml = "";
+      if (today.getFullYear() === year) {
+        const absDiff = Math.abs(diff).toFixed(1).replace(/\.0$/, "");
+        if (diff >= 5) {
+          forecastHtml = `<div class="forecast-line forecast-ahead">&#9650; Je loopt <strong>${absDiff} uur voor</strong> op schema — op dit tempo eindig je het jaar op <strong>${Math.round(projection)} uur</strong>.</div>`;
+        } else if (diff <= -5) {
+          forecastHtml = `<div class="forecast-line forecast-behind">&#9660; Je loopt <strong>${absDiff} uur achter</strong> op schema — op dit tempo eindig je het jaar op <strong>${Math.round(projection)} uur</strong>.</div>`;
+        } else {
+          forecastHtml = `<div class="forecast-line forecast-ok">&#9654; Je zit precies op schema voor ${yearGoal} uur.</div>`;
+        }
+      }
+
+      document.getElementById("year-section").innerHTML = `
     <div class="year-card">
       <div class="year-header">
         <div class="year-title">&#128197; Jaaroverzicht ${year}</div>
@@ -1103,11 +1714,11 @@ function renderYearForecast() {
       </div>
       <div class="year-stats">
         <div class="year-stat">
-          <div class="year-stat-num" style="color:#2563eb">${yearTotal.toFixed(1).replace(/\.0$/,"")}</div>
+          <div class="year-stat-num" style="color:#2563eb">${yearTotal.toFixed(1).replace(/\.0$/, "")}</div>
           <div class="year-stat-lbl">Uren gewerkt</div>
         </div>
         <div class="year-stat">
-          <div class="year-stat-num" style="color:${diff>=0?'#16a34a':'#dc2626'}">${diff>=0?'+':''}${diff.toFixed(1).replace(/\.0$/,"")}</div>
+          <div class="year-stat-num" style="color:${diff >= 0 ? '#16a34a' : '#dc2626'}">${diff >= 0 ? '+' : ''}${diff.toFixed(1).replace(/\.0$/, "")}</div>
           <div class="year-stat-lbl">Voor/achter op schema</div>
         </div>
         <div class="year-stat">
@@ -1124,184 +1735,187 @@ function renderYearForecast() {
       </div>
       ${forecastHtml}
     </div>`;
-}
+    }
 
-// Apply saved builtin middelen renames and deletions
-(function() {
-  const renames  = JSON.parse(localStorage.getItem("zzp_middelen_rename")  || "{}");
-  const deleted  = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
-  for (let i = BUILTIN_MIDDELEN.length - 1; i >= 0; i--) {
-    const m = BUILTIN_MIDDELEN[i];
-    if (deleted.includes(m.key)) { BUILTIN_MIDDELEN.splice(i, 1); continue; }
-    if (renames[m.key]) m.label = renames[m.key];
-  }
-  window.renamedMiddelen = renames;
-})();
-
-// ── Init: load from Firebase, fall back to localStorage ──────────────────────
-async function initApp() {
-  // Show loading indicator
-  document.getElementById("cal-grid").innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text3);font-size:14px">⏳ Gegevens laden…</div>';
-
-  // Load all data from Firebase (with localStorage fallback)
-  entries        = await fbLoad("entries",        entries);
-  hours          = await fbLoad("hours",          hours);
-  customTypes    = await fbLoad("customTypes",    customTypes);
-  yearGoal       = await fbLoad("yearGoal",       yearGoal);
-  deletedBuiltin = await fbLoad("deletedBuiltin", deletedBuiltin);
-  customMiddelen = await fbLoad("customMiddelen", customMiddelen);
-
-  // Rebuild TYPES with loaded deletedBuiltin
-  TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
-
-  // Apply middelen renames/deletions
-  const renames = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
-  const deletedM = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
-  for (let i = BUILTIN_MIDDELEN.length - 1; i >= 0; i--) {
-    const m = BUILTIN_MIDDELEN[i];
-    if (deletedM.includes(m.key)) { BUILTIN_MIDDELEN.splice(i, 1); continue; }
-    if (renames[m.key]) m.label = renames[m.key];
-  }
-  window.renamedMiddelen = renames;
-
-  // Cache to localStorage
-  localStorage.setItem("zzp_entries",  JSON.stringify(entries));
-  localStorage.setItem("zzp_hours",    JSON.stringify(hours));
-  localStorage.setItem("zzp_custom",   JSON.stringify(customTypes));
-  localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
-  localStorage.setItem("zzp_deleted",  JSON.stringify(deletedBuiltin));
-  localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
-
-  renderSettings();
-  renderCalendar();
-  renderSummary();
-  renderYearForecast();
-
-  // Listen for real-time updates from Firebase
-  onSnapshot(collection(db, "zzp"), (snapshot) => {
-    let changed = false;
-    snapshot.docChanges().forEach(change => {
-      if (change.type === "modified" || change.type === "added") {
-        try {
-          const val = JSON.parse(change.doc.data().value);
-          const id  = change.doc.id;
-          if (id === "entries")       { entries        = val; changed = true; }
-          if (id === "hours")         { hours          = val; changed = true; }
-          if (id === "customTypes")   { customTypes    = val; changed = true; }
-          if (id === "yearGoal")      { yearGoal       = val; changed = true; }
-          if (id === "customMiddelen"){ customMiddelen = val; changed = true; }
-          if (id === "deletedBuiltin"){ deletedBuiltin = val; TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key)); changed = true; }
-        } catch(e) {}
+    // Apply saved builtin middelen renames and deletions
+    (function () {
+      const renames = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
+      const deleted = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
+      for (let i = BUILTIN_MIDDELEN.length - 1; i >= 0; i--) {
+        const m = BUILTIN_MIDDELEN[i];
+        if (deleted.includes(m.key)) { BUILTIN_MIDDELEN.splice(i, 1); continue; }
+        if (renames[m.key]) m.label = renames[m.key];
       }
-    });
-    if (changed) {
+      window.renamedMiddelen = renames;
+    })();
+
+    // ── Init: load from Firebase, fall back to localStorage ──────────────────────
+    async function initApp() {
+      // Show loading indicator
+      document.getElementById("cal-grid").innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text3);font-size:14px">⏳ Gegevens laden…</div>';
+
+      // Load all data from Firebase (with localStorage fallback)
+      entries = await fbLoad("entries", entries);
+      hours = await fbLoad("hours", hours);
+      customTypes = await fbLoad("customTypes", customTypes);
+      yearGoal = await fbLoad("yearGoal", yearGoal);
+      deletedBuiltin = await fbLoad("deletedBuiltin", deletedBuiltin);
+      customMiddelen = await fbLoad("customMiddelen", customMiddelen);
+
+      // Rebuild TYPES with loaded deletedBuiltin
+      TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
+
+      // Apply middelen renames/deletions
+      const renames = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
+      const deletedM = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
+      for (let i = BUILTIN_MIDDELEN.length - 1; i >= 0; i--) {
+        const m = BUILTIN_MIDDELEN[i];
+        if (deletedM.includes(m.key)) { BUILTIN_MIDDELEN.splice(i, 1); continue; }
+        if (renames[m.key]) m.label = renames[m.key];
+      }
+      window.renamedMiddelen = renames;
+
+      // Cache to localStorage
+      localStorage.setItem("zzp_entries", JSON.stringify(entries));
+      localStorage.setItem("zzp_hours", JSON.stringify(hours));
+      localStorage.setItem("zzp_custom", JSON.stringify(customTypes));
+      localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
+      localStorage.setItem("zzp_deleted", JSON.stringify(deletedBuiltin));
+      localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
+
       renderSettings();
       renderCalendar();
       renderSummary();
       renderYearForecast();
+
+      // Listen for real-time updates from Firebase
+      onSnapshot(collection(db, "zzp"), (snapshot) => {
+        let changed = false;
+        snapshot.docChanges().forEach(change => {
+          if (change.type === "modified" || change.type === "added") {
+            try {
+              const val = JSON.parse(change.doc.data().value);
+              const id = change.doc.id;
+              if (id === "entries") { entries = val; changed = true; }
+              if (id === "hours") { hours = val; changed = true; }
+              if (id === "customTypes") { customTypes = val; changed = true; }
+              if (id === "yearGoal") { yearGoal = val; changed = true; }
+              if (id === "customMiddelen") { customMiddelen = val; changed = true; }
+              if (id === "deletedBuiltin") { deletedBuiltin = val; TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key)); changed = true; }
+            } catch (e) { }
+          }
+        });
+        if (changed) {
+          renderSettings();
+          renderCalendar();
+          renderSummary();
+          renderYearForecast();
+        }
+      });
     }
-  });
-}
 
-initApp();
-</script>
+    initApp();
+  </script>
 
-<!-- Add type modal -->
-<div class="modal-overlay" id="add-modal-overlay" onclick="if(event.target===this)closeAddModal()">
-  <div class="add-modal">
-    <h3>Nieuw onderdeel toevoegen</h3>
-    <div class="field-row">
-      <label>Naam</label>
-      <input type="text" id="new-name" placeholder="bijv. Vergadering" maxlength="30">
-    </div>
-    <div class="field-row">
-      <label>Standaard uren</label>
-      <input type="number" id="new-hours" min="0" max="24" step="0.5" value="8">
-    </div>
-    <div class="field-row">
-      <label>Kleur</label>
-      <div class="color-options" id="color-picker"></div>
-    </div>
-    <div class="exclude-row">
-      <input type="checkbox" id="new-exclude">
-      <label for="new-exclude">Telt niet mee in totaal uren</label>
-    </div>
-    <div class="modal-btns">
-      <button class="btn-ghost" onclick="closeAddModal()">Annuleren</button>
-      <button class="btn-primary" onclick="saveCustomType()">Toevoegen</button>
+  <!-- Add type modal -->
+  <div class="modal-overlay" id="add-modal-overlay" onclick="if(event.target===this)closeAddModal()">
+    <div class="add-modal">
+      <h3>Nieuw onderdeel toevoegen</h3>
+      <div class="field-row">
+        <label>Naam</label>
+        <input type="text" id="new-name" placeholder="bijv. Vergadering" maxlength="30">
+      </div>
+      <div class="field-row">
+        <label>Standaard uren</label>
+        <input type="number" id="new-hours" min="0" max="24" step="0.5" value="8">
+      </div>
+      <div class="field-row">
+        <label>Kleur</label>
+        <div class="color-options" id="color-picker"></div>
+      </div>
+      <div class="exclude-row">
+        <input type="checkbox" id="new-exclude">
+        <label for="new-exclude">Telt niet mee in totaal uren</label>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-ghost" onclick="closeAddModal()">Annuleren</button>
+        <button class="btn-primary" onclick="saveCustomType()">Toevoegen</button>
+      </div>
     </div>
   </div>
-</div>
-<!-- Add/edit middel modal -->
-<div class="modal-overlay" id="add-middel-overlay" onclick="if(event.target===this)closeAddMiddelModal()">
-  <div class="add-modal">
-    <h3 id="add-middel-title">Nieuw middel toevoegen</h3>
-    <div class="field-row">
-      <label>Naam</label>
-      <input type="text" id="new-middel-name" placeholder="bijv. Herbicide" maxlength="40"
-        onkeydown="if(event.key==='Enter')saveNewMiddel()">
-    </div>
-    <div class="modal-btns">
-      <button class="btn-ghost" onclick="closeAddMiddelModal()">Annuleren</button>
-      <button class="btn-primary" onclick="saveNewMiddel()">Opslaan</button>
-    </div>
-    <button class="btn-danger" id="middel-delete-btn" onclick="deleteMiddel()" style="display:none;margin-top:10px">Verwijder dit middel</button>
-  </div>
-</div>
-
-<!-- Confirm middel delete -->
-<div class="modal-overlay" id="confirm-middel-overlay" onclick="if(event.target===this)cancelMiddelDelete()">
-  <div class="modal" style="max-width:300px">
-    <div class="modal-title">Middel verwijderen</div>
-    <p style="font-size:14px;color:var(--text2);margin:12px 0 20px">"<span id="confirm-middel-name"></span>" verwijderen? Het wordt ook verwijderd uit alle registraties.</p>
-    <div class="modal-btns">
-      <button class="btn-ghost" onclick="cancelMiddelDelete()">Annuleren</button>
-      <button class="btn-primary" style="background:var(--red)" onclick="confirmMiddelDelete()">Verwijderen</button>
+  <!-- Add/edit middel modal -->
+  <div class="modal-overlay" id="add-middel-overlay" onclick="if(event.target===this)closeAddMiddelModal()">
+    <div class="add-modal">
+      <h3 id="add-middel-title">Nieuw middel toevoegen</h3>
+      <div class="field-row">
+        <label>Naam</label>
+        <input type="text" id="new-middel-name" placeholder="bijv. Herbicide" maxlength="40"
+          onkeydown="if(event.key==='Enter')saveNewMiddel()">
+      </div>
+      <div class="modal-btns">
+        <button class="btn-ghost" onclick="closeAddMiddelModal()">Annuleren</button>
+        <button class="btn-primary" onclick="saveNewMiddel()">Opslaan</button>
+      </div>
+      <button class="btn-danger" id="middel-delete-btn" onclick="deleteMiddel()"
+        style="display:none;margin-top:10px">Verwijder dit middel</button>
     </div>
   </div>
-</div>
 
-<!-- Confirm delete modal -->
-<div class="modal-overlay" id="confirm-delete-overlay" onclick="if(event.target===this)cancelDelete()">
-  <div class="modal" style="max-width:300px">
-    <div class="modal-title">Onderdeel verwijderen</div>
-    <p style="font-size:14px;color:var(--text2);margin:12px 0 20px">"<span id="confirm-delete-name"></span>" verwijderen? Geregistreerde dagen met dit onderdeel worden ook verwijderd.</p>
-    <div class="modal-btns">
-      <button class="btn-ghost" onclick="cancelDelete()">Annuleren</button>
-      <button class="btn-primary" style="background:var(--red)" onclick="confirmDelete()">Verwijderen</button>
+  <!-- Confirm middel delete -->
+  <div class="modal-overlay" id="confirm-middel-overlay" onclick="if(event.target===this)cancelMiddelDelete()">
+    <div class="modal" style="max-width:300px">
+      <div class="modal-title">Middel verwijderen</div>
+      <p style="font-size:14px;color:var(--text2);margin:12px 0 20px">"<span id="confirm-middel-name"></span>"
+        verwijderen? Het wordt ook verwijderd uit alle registraties.</p>
+      <div class="modal-btns">
+        <button class="btn-ghost" onclick="cancelMiddelDelete()">Annuleren</button>
+        <button class="btn-primary" style="background:var(--red)" onclick="confirmMiddelDelete()">Verwijderen</button>
+      </div>
     </div>
   </div>
-</div>
-<script>
-// Inline manifest via blob
-const manifest = {
-  name: "Urenregistratie ZZP",
-  short_name: "Uren ZZP",
-  description: "Urenregistratie voor ZZP'ers",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#f5f4f0",
-  theme_color: "#2563eb",
-  orientation: "portrait-primary",
-  icons: [
-    {
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E%3Ctext y='.9em' font-size='75' x='12'%3E%F0%9F%95%90%3C/text%3E%3C/svg%3E",
-      sizes: "192x192",
-      type: "image/svg+xml",
-      purpose: "any maskable"
-    }
-  ]
-};
-const blob = new Blob([JSON.stringify(manifest)], {type: "application/json"});
-const manifestUrl = URL.createObjectURL(blob);
-const link = document.createElement("link");
-link.rel = "manifest";
-link.href = manifestUrl;
-document.head.appendChild(link);
 
-// Service worker for offline caching
-if ("serviceWorker" in navigator) {
-  const swCode = `
+  <!-- Confirm delete modal -->
+  <div class="modal-overlay" id="confirm-delete-overlay" onclick="if(event.target===this)cancelDelete()">
+    <div class="modal" style="max-width:300px">
+      <div class="modal-title">Onderdeel verwijderen</div>
+      <p style="font-size:14px;color:var(--text2);margin:12px 0 20px">"<span id="confirm-delete-name"></span>"
+        verwijderen? Geregistreerde dagen met dit onderdeel worden ook verwijderd.</p>
+      <div class="modal-btns">
+        <button class="btn-ghost" onclick="cancelDelete()">Annuleren</button>
+        <button class="btn-primary" style="background:var(--red)" onclick="confirmDelete()">Verwijderen</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Inline manifest via blob
+    const manifest = {
+      name: "Urenregistratie ZZP",
+      short_name: "Uren ZZP",
+      description: "Urenregistratie voor ZZP'ers",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#f5f4f0",
+      theme_color: "#2563eb",
+      orientation: "portrait-primary",
+      icons: [
+        {
+          src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232563eb'/%3E%3Ctext y='.9em' font-size='75' x='12'%3E%F0%9F%95%90%3C/text%3E%3C/svg%3E",
+          sizes: "192x192",
+          type: "image/svg+xml",
+          purpose: "any maskable"
+        }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: "application/json" });
+    const manifestUrl = URL.createObjectURL(blob);
+    const link = document.createElement("link");
+    link.rel = "manifest";
+    link.href = manifestUrl;
+    document.head.appendChild(link);
+
+    // Service worker for offline caching
+    if ("serviceWorker" in navigator) {
+      const swCode = `
     const CACHE = "zzp-v1";
     const ASSETS = [self.location.href];
     self.addEventListener("install", e => {
@@ -1318,40 +1932,41 @@ if ("serviceWorker" in navigator) {
       e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
     });
   `;
-  const swBlob = new Blob([swCode], {type: "application/javascript"});
-  const swUrl = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swUrl).catch(() => {});
-}
+      const swBlob = new Blob([swCode], { type: "application/javascript" });
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(() => { });
+    }
 
-// Show install prompt banner
-let deferredPrompt = null;
-window.addEventListener("beforeinstallprompt", e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  showInstallBanner();
-});
+    // Show install prompt banner
+    let deferredPrompt = null;
+    window.addEventListener("beforeinstallprompt", e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showInstallBanner();
+    });
 
-function showInstallBanner() {
-  if (document.getElementById("install-banner")) return;
-  const banner = document.createElement("div");
-  banner.id = "install-banner";
-  banner.style.cssText = "position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-family:inherit;display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:9999;max-width:calc(100% - 32px)";
-  banner.innerHTML = `<span>📲 Installeer als app op dit scherm</span>
+    function showInstallBanner() {
+      if (document.getElementById("install-banner")) return;
+      const banner = document.createElement("div");
+      banner.id = "install-banner";
+      banner.style.cssText = "position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-family:inherit;display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:9999;max-width:calc(100% - 32px)";
+      banner.innerHTML = `<span>📲 Installeer als app op dit scherm</span>
     <button onclick="installApp()" style="background:#fff;color:#2563eb;border:none;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Installeren</button>
     <button onclick="this.parentElement.remove()" style="background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;line-height:1;padding:0">×</button>`;
-  document.body.appendChild(banner);
-}
+      document.body.appendChild(banner);
+    }
 
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => {
-      deferredPrompt = null;
-      const b = document.getElementById("install-banner");
-      if (b) b.remove();
-    });
-  }
-}
-</script>
+    function installApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          const b = document.getElementById("install-banner");
+          if (b) b.remove();
+        });
+      }
+    }
+  </script>
 </body>
+
 </html>
