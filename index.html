@@ -161,6 +161,9 @@
     cursor: pointer;
     transition: background .1s;
     position: relative;
+    min-width: 0;
+    overflow: hidden;
+    word-break: break-word;
   }
   .day-cell:nth-child(8n) { border-right: none; }
   .day-cell:hover { background: var(--surface2); }
@@ -190,7 +193,7 @@
     font-weight: 500;
     padding: 2px 7px;
     border-radius: 20px;
-    display: inline-block;
+    display: block;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -599,7 +602,13 @@ const BUILTIN_MIDDELEN = [
   { key:"bemesting",   label:"Bemesting" },
 ];
 let customMiddelen   = JSON.parse(localStorage.getItem("zzp_middelen") || "[]");
-const allMiddelen    = () => [...BUILTIN_MIDDELEN, ...customMiddelen];
+let deletedMiddelen  = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
+let renamedMiddelen  = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
+const allMiddelen    = () => {
+  return [...BUILTIN_MIDDELEN.filter(m => !deletedMiddelen.includes(m.key))
+    .map(m => renamedMiddelen[m.key] ? {...m, label: renamedMiddelen[m.key]} : m),
+    ...customMiddelen];
+};
 let selectedMiddelen = []; // keys of selected middelen for current modal
 let TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
 
@@ -631,14 +640,18 @@ const saveAll = () => {
   localStorage.setItem("zzp_custom",   JSON.stringify(customTypes));
   localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
   localStorage.setItem("zzp_deleted",  JSON.stringify(deletedBuiltin));
-  localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
+  localStorage.setItem("zzp_middelen",         JSON.stringify(customMiddelen));
+  localStorage.setItem("zzp_deleted_middelen", JSON.stringify(deletedMiddelen));
+  localStorage.setItem("zzp_middelen_rename",  JSON.stringify(renamedMiddelen));
   // Save to Firebase (sync)
   fbSave("entries",      entries);
   fbSave("hours",        hours);
   fbSave("customTypes",  customTypes);
   fbSave("yearGoal",     yearGoal);
   fbSave("deletedBuiltin", deletedBuiltin);
-  fbSave("customMiddelen", customMiddelen);
+  fbSave("customMiddelen",  customMiddelen);
+  fbSave("deletedMiddelen", deletedMiddelen);
+  fbSave("renamedMiddelen", renamedMiddelen);
 };
 
 
@@ -863,15 +876,8 @@ function saveNewMiddel() {
     if (customIdx !== -1) {
       customMiddelen[customIdx].label = name;
     } else {
-      // It's a builtin — store renamed version as custom override
-      // Remove from builtin display by adding to deletedBuiltinMiddelen, add as custom with same key logic
-      // Simpler: just store in a rename map
-      if (!window.renamedMiddelen) window.renamedMiddelen = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
-      window.renamedMiddelen[editMiddelKey] = name;
-      localStorage.setItem("zzp_middelen_rename", JSON.stringify(window.renamedMiddelen));
-      // Patch BUILTIN_MIDDELEN display
-      const bi = BUILTIN_MIDDELEN.find(m => m.key === editMiddelKey);
-      if (bi) bi.label = name;
+      // It's a builtin — store in renamedMiddelen (syncs via Firebase)
+      renamedMiddelen[editMiddelKey] = name;
     }
   } else {
     // Add mode
@@ -903,12 +909,8 @@ function confirmMiddelDelete() {
   if (isCustom) {
     customMiddelen = customMiddelen.filter(m => m.key !== key);
   } else {
-    // Hide builtin by adding to a deleted list
-    let deletedM = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
-    if (!deletedM.includes(key)) deletedM.push(key);
-    localStorage.setItem("zzp_deleted_middelen", JSON.stringify(deletedM));
-    const idx = BUILTIN_MIDDELEN.findIndex(m => m.key === key);
-    if (idx !== -1) BUILTIN_MIDDELEN.splice(idx, 1);
+    // Hide builtin by adding to global deletedMiddelen (syncs via Firebase)
+    if (!deletedMiddelen.includes(key)) deletedMiddelen.push(key);
   }
   // Remove from any entries
   Object.values(entries).forEach(v => {
@@ -1178,20 +1180,15 @@ async function initApp() {
   customTypes    = await fbLoad("customTypes",    customTypes);
   yearGoal       = await fbLoad("yearGoal",       yearGoal);
   deletedBuiltin = await fbLoad("deletedBuiltin", deletedBuiltin);
-  customMiddelen = await fbLoad("customMiddelen", customMiddelen);
+  customMiddelen   = await fbLoad("customMiddelen",  customMiddelen);
+  deletedMiddelen  = await fbLoad("deletedMiddelen", deletedMiddelen);
+  renamedMiddelen  = await fbLoad("renamedMiddelen", renamedMiddelen);
 
   // Rebuild TYPES with loaded deletedBuiltin
   TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key));
 
   // Apply middelen renames/deletions
-  const renames = JSON.parse(localStorage.getItem("zzp_middelen_rename") || "{}");
-  const deletedM = JSON.parse(localStorage.getItem("zzp_deleted_middelen") || "[]");
-  for (let i = BUILTIN_MIDDELEN.length - 1; i >= 0; i--) {
-    const m = BUILTIN_MIDDELEN[i];
-    if (deletedM.includes(m.key)) { BUILTIN_MIDDELEN.splice(i, 1); continue; }
-    if (renames[m.key]) m.label = renames[m.key];
-  }
-  window.renamedMiddelen = renames;
+  // renames/deletions now handled by allMiddelen() function dynamically
 
   // Cache to localStorage
   localStorage.setItem("zzp_entries",  JSON.stringify(entries));
@@ -1199,7 +1196,9 @@ async function initApp() {
   localStorage.setItem("zzp_custom",   JSON.stringify(customTypes));
   localStorage.setItem("zzp_yeargoal", JSON.stringify(yearGoal));
   localStorage.setItem("zzp_deleted",  JSON.stringify(deletedBuiltin));
-  localStorage.setItem("zzp_middelen", JSON.stringify(customMiddelen));
+  localStorage.setItem("zzp_middelen",         JSON.stringify(customMiddelen));
+  localStorage.setItem("zzp_deleted_middelen", JSON.stringify(deletedMiddelen));
+  localStorage.setItem("zzp_middelen_rename",  JSON.stringify(renamedMiddelen));
 
   renderSettings();
   renderCalendar();
@@ -1218,7 +1217,9 @@ async function initApp() {
           if (id === "hours")         { hours          = val; changed = true; }
           if (id === "customTypes")   { customTypes    = val; changed = true; }
           if (id === "yearGoal")      { yearGoal       = val; changed = true; }
-          if (id === "customMiddelen"){ customMiddelen = val; changed = true; }
+          if (id === "customMiddelen") { customMiddelen  = val; changed = true; }
+          if (id === "deletedMiddelen"){ deletedMiddelen = val; changed = true; }
+          if (id === "renamedMiddelen"){ renamedMiddelen = val; changed = true; }
           if (id === "deletedBuiltin"){ deletedBuiltin = val; TYPES = BUILTIN_TYPES.filter(t => !deletedBuiltin.includes(t.key)); changed = true; }
         } catch(e) {}
       }
