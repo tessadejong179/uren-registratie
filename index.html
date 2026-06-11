@@ -420,14 +420,16 @@
     .export-btn { font-size: 12px; padding: 6px 10px; }
     .nav-btn { padding: 5px 10px; font-size: 15px; }
 
-    /* Calendar grid: tighter cells, keep pills but smaller */
-    .cal-days-header { grid-template-columns: 26px repeat(7, 1fr); }
-    .cal-days-header div { font-size: 10px; padding: 6px 0; }
-    .cal-grid { grid-template-columns: 26px repeat(7, 1fr); }
-    .week-num { font-size: 9px; padding-top: 6px; }
-    .day-cell { min-height: 54px; padding: 4px 3px; }
-    .day-cell:nth-child(8n) { border-right: none; }
-    .day-num { font-size: 11px; width: 20px; height: 20px; margin-bottom: 2px; }
+    /* Calendar grid: hide week numbers on mobile for more space */
+    .cal-days-header { grid-template-columns: repeat(7, 1fr); }
+    .cal-days-header div:first-child { display: none; }
+    .cal-days-header div { font-size: 11px; padding: 6px 0; }
+    .cal-grid { grid-template-columns: repeat(7, 1fr); }
+    .week-num { display: none; }
+    .day-cell { min-height: 52px; padding: 4px 4px; }
+    .day-cell:nth-child(7n) { border-right: none; }
+    .day-cell:nth-child(8n) { border-right: 1px solid var(--border); }
+    .day-num { font-size: 12px; width: 22px; height: 22px; margin-bottom: 2px; }
     .act-pill { font-size: 9px; padding: 1px 4px; max-width: 100%; }
     .day-hrs { font-size: 9px; margin-top: 1px; }
     .day-note { display: none; }
@@ -511,6 +513,10 @@
     <div class="hours-row" id="hours-row-wrap">
       <label>Uren (laat leeg voor standaard)</label>
       <input type="number" id="modal-hours" min="0.5" max="24" step="0.5" placeholder="–">
+    </div>
+    <div class="hours-row" style="margin-bottom:14px">
+      <label>Reistijd (uren)</label>
+      <input type="number" id="modal-travel" min="0" max="24" step="0.5" placeholder="0">
     </div>
     <div style="margin-bottom:16px">
       <label style="display:block;font-size:12px;color:var(--text2);font-weight:500;margin-bottom:5px">Notitie (bijv. klantnaam)</label>
@@ -688,19 +694,20 @@ function renderCalendar() {
     return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
   };
 
+  const isMobile = window.innerWidth <= 600;
+
   let cells = "";
-  let colPos = offset; // track position in 7-col grid (0=Mon)
   // inject week number cell before first day
   if (offset > 0) {
     const firstWeek = getWeekNum(new Date(year, month, 1));
-    cells += `<div class="week-num">${firstWeek}</div>`;
+    if (!isMobile) cells += `<div class="week-num">${firstWeek}</div>`;
     for (let i = 0; i < offset; i++) cells += `<div class="day-cell empty"></div>`;
   }
   for (let d = 1; d <= days; d++) {
     const dateObj = new Date(year, month, d);
     const dow    = (dateObj.getDay() + 6) % 7; // Mon=0
     // inject week number at start of each new row (Monday or day 1)
-    if (dow === 0) {
+    if (dow === 0 && !isMobile) {
       cells += `<div class="week-num">${getWeekNum(dateObj)}</div>`;
     }
     const dk     = dayKey(year, month, d);
@@ -712,11 +719,12 @@ function renderCalendar() {
     if (t) {
       const h = entry.hours !== undefined ? entry.hours : getHours(t);
       const noteText    = entry.note ? `<div class="day-note">${entry.note}</div>` : "";
+      const travelText  = entry.travel ? `<div class="day-hrs" style="color:#0284c7">🚗 ${entry.travel}u</div>` : "";
       const middelenText = entry.middelen && entry.middelen.length
         ? `<div class="day-middelen">🌿 ${entry.middelen.map(k => allMiddelen().find(m=>m.key===k)?.label||k).join(", ")}</div>`
         : "";
       pill = `<div class="act-pill" style="background:${t.bg};color:${t.text}">${t.label}</div>
-              <div class="day-hrs">${h}u</div>${noteText}${middelenText}`;
+              <div class="day-hrs">${h}u</div>${travelText}${noteText}${middelenText}`;
     }
     cells += `<div class="day-cell${isWE?' weekend':''}${isTod?' today':''}"
         onclick="openModal('${dk}',${d})">
@@ -760,6 +768,7 @@ function openModal(dk, day) {
   document.getElementById("modal-date").textContent = `${cur.year}`;
 
   document.getElementById("modal-hours").value = entry && entry.hours !== undefined ? entry.hours : "";
+  document.getElementById("modal-travel").value = entry && entry.travel !== undefined ? entry.travel : "";
   document.getElementById("modal-note").value = entry && entry.note ? entry.note : "";
   document.getElementById("btn-delete").style.display = entry ? "block" : "none";
   selectedMiddelen = (entry && entry.middelen) ? [...entry.middelen] : [];
@@ -924,11 +933,13 @@ function closeModal() {
 
 function saveEntry() {
   if (!selectedType) { closeModal(); return; }
-  const hoursVal = document.getElementById("modal-hours").value;
-  const noteVal  = document.getElementById("modal-note").value.trim();
+  const hoursVal  = document.getElementById("modal-hours").value;
+  const travelVal = document.getElementById("modal-travel").value;
+  const noteVal   = document.getElementById("modal-note").value.trim();
   entries[modalKey] = {
     type:     selectedType,
     hours:    hoursVal !== "" ? +hoursVal : undefined,
+    travel:   travelVal !== "" && +travelVal > 0 ? +travelVal : undefined,
     note:     noteVal || undefined,
     middelen: selectedMiddelen.length ? [...selectedMiddelen] : undefined
   };
@@ -968,7 +979,7 @@ function exportExcel() {
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
   };
-  const rows = [["Datum","Dag","Week","Type","Uren","Telt mee in totaal","Notitie","Middelen"]];
+  const rows = [["Datum","Dag","Week","Type","Uren","Reistijd","Telt mee in totaal","Notitie","Middelen"]];
   Object.entries(entries).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,v]) => {
     if (!v.type) return;
     const d = new Date(k);
@@ -981,6 +992,7 @@ function exportExcel() {
       t2?.label || v.type,
       h,
       t2?.excludeFromTotal ? "Nee" : "Ja",
+      v.travel || "",
       v.note || "",
       (v.middelen||[]).map(k => allMiddelen().find(m=>m.key===k)?.label||k).join(", ")
     ]);
